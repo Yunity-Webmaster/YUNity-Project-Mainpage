@@ -1,0 +1,31 @@
+body{
+    margin: 0px;
+}
+main{
+    margin: 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    background-color: #f2b400;
+    padding: 0;
+    margin: 0;
+    display: flex;              /* use flexbox */
+    justify-content: center;    /* centers the items horizontally */
+}
+
+.navbar li {
+    margin: 0; /* remove float and let flexbox handle positioning */
+}
+
+.navbar a {
+    color: whitesmoke;
+    text-decoration: none;
+    padding: 15px;
+    display: block;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #a07904;
+}
