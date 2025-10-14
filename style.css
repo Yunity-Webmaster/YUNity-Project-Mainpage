@@ -1,10 +1,29 @@
-body{
-    margin: 0px;
+/* =====================================
+   GLOBAL STYLES
+   ===================================== */
+body {
+    margin: 0;
+    font-family: "Calibri", serif;
 }
-main{
+main {
     margin: 20px;
 }
 
+/* Background overlay for all pages */
+.background-solid {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background-color: #17344e;
+    height: 100%;
+    width: 100%;
+}
+
+/* =====================================
+   HEADER
+   ===================================== */
 .header-container {
     position: relative;
     height: 150px;
@@ -33,14 +52,13 @@ main{
     font-weight: lighter;
     color: white;
     margin: 0;
-    height: 150px; /* match header container */
+    height: 150px;
     display: flex;
-    align-items: center;  /* vertical center */
-    justify-content: center; /* horizontal center */
-    font-family: "Calibri", serif;
+    align-items: center;
+    justify-content: center;
 }
 
-.header-solid{
+.header-solid {
     position: absolute;
     top: 0;
     left: 0;
@@ -48,23 +66,15 @@ main{
     background-color: #17344e;
     height: 150px;
     width: 100%;
-}  
-
-.background-solid {
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    background-color: #17344e;
-    height: 100%;
-    width: 100%;
 }
 
+/* =====================================
+   NAVBAR
+   ===================================== */
 .navbar ul {
     position: relative;
     z-index: 3;
-    list-style-type: none;
+    list-style: none;
     background-color: #cba230;
     padding: 0;
     margin: 0;
@@ -73,28 +83,27 @@ main{
 }
 
 .navbar li {
-    z-index: 2;
-    margin: 0; /* remove float and let flexbox handle positioning */
+    margin: 0;
 }
 
 .navbar a {
-    z-index: 2;
+    display: block;
+    padding: 15px;
     color: whitesmoke;
     text-decoration: none;
-    padding: 15px;
-    display: block;
     text-align: center;
-    font-family: "Calibri", serif;
 }
 
 .navbar a:hover {
-    z-index: 2;
     background-color: #705a1c;
 }
 
-.article-1 {
+/* =====================================
+   ARTICLES & HEADLINES
+   ===================================== */
+.article {
     position: relative;
-    top: 0px;
+    top: 0;
     justify-content: center;
     z-index: 7;
     text-decoration: none;
@@ -108,36 +117,56 @@ main{
     color: white;
     margin: 0 auto;
     height: 200px;
-    width: 45%; 
-    display: flex;
-    align-items: center;  /* vertical center */
-    justify-content: center; /* horizontal center */
-    font-family: "Calibri", serif;
-}
-
-.article-1 h2 a{
-    color: #ffff;
-    text-decoration: none;
-    font-family: "Calibri", serif;
-}
-
-.article-1 h2 a:hover { 
-    color: #cba230;
-    text-decoration: none;  
-    font-family: "Calibri", serif;           
-}
-
-.image {
-    background-image: url("President_Donald_Trump_attends_the_Memorial_Service_for_Charlie_Kirk.jpg");
-    height: 500px;
     width: 45%;
-    background-size: cover;
-    background-position: center;
-    margin: -50px auto 0 auto;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.Kirk{
+.article h2 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.article h2 a:hover {
+    color: #cba230;
+    text-decoration: none;
+}
+
+/* Article bottom citation line */
+.article-citations {
+    text-align: center;
+    margin: 40px auto;
+    position: relative;
+}
+
+.article-citations::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #cba230;
+    margin-bottom: 20px;
+}
+
+.article-citations a {
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: lighter;
+    text-decoration: none;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.article-citations a:hover {
+    color: #cba230;
+    text-decoration: none;
+}
+
+/* =====================================
+   IMAGES & TEXT BLOCKS
+   ===================================== */
+.Kirk, .Shutdown {
     position: relative;
     z-index: 7;
     justify-content: center;
@@ -147,44 +176,310 @@ main{
     display: flex;
     text-align: center;
     font-size: 40px;
-    color: #ffff;
-    margin: 0 auto;
+    color: #ffffff;
+    margin: 0 auto 0 auto;
     width: 75%;
-    font-family: "Calibri", bold;
 }
 
-.Image {
+.Author {
+    text-align: center;
+    font-size: 15px;
+    color: #295f8f;
+    margin: -80px auto 0 auto;
+    width: 45%;
+    text-decoration: none;
+}
+
+.Author a {
+    color: #295f8f;
+    text-decoration: underline;
+}
+
+.KirkImage {
     background-image: url("President_Donald_Trump_attends_the_Memorial_Service_for_Charlie_Kirk.jpg");
     height: 500px;
     width: 45%;
     background-size: cover;
     background-position: center;
-    
-    /* Center horizontally */
-    margin: -50px auto 0 auto; /* Top | Left/Right | Bottom */
+    margin: -50px auto 0 auto;
     display: block;
 }
 
+.Kirk .KirkImage {
+    margin: -15px auto 0 auto;
+}
+
+.ShutdownImage {
+    background-image: url("Capitol_Building.jpg");
+    height: 500px;
+    width: 45%;
+    background-size: cover;
+    background-position: center;
+    margin: -50px auto 0 auto;
+    display: block;
+}
+
+.Shutdown .ShutdownImage {
+    margin: -15px auto 0 auto;
+}
+
 .Credit {
-    color: #295f8f; /* Fixed hex code */
+    color: #295f8f;
     font-size: 15px;
-    font-family: 'Calibri', serif;
-    
-    /* Center horizontally */
-    margin: -15px auto 0 auto; /* Top | Left/Right | Bottom */
+    margin: -15px auto 0 auto;
     width: 45%;
     text-align: left;
     display: block;
 }
 
 .Text {
-    color: #fff; /* Fixed hex code */
+    color: #ffffff;
     font-size: 35px;
-    font-family: 'Calibri', serif;
-    
-    /* Center horizontally */
-    margin: -25px auto 0 auto; /* Top | Left/Right | Bottom */
+    margin: -25px auto 0 auto;
     width: 50%;
     text-align: left;
     display: block;
 }
+
+/* =====================================
+   WORKS CITED / CITATIONS
+   ===================================== */
+.WorksCited {
+    position: relative;
+    top: 0;
+    width: 60%;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #f5f5f5;
+}
+
+.Citations h2 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.Citations h2 a:hover {
+    color: #cba230;
+    text-decoration: none;
+}
+
+body.works-cited-page {
+    background-color: #17344e;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+body.works-cited-page .WorksCited {
+    margin: 0 auto;
+    padding-top: 10px;
+    width: 60%;
+    text-align: left;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #f5f5f5;
+}
+
+body.works-cited-page .WorksCited h1 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: lighter;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #cba230;
+    padding-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+body.works-cited-page .WorksCited p {
+    margin-bottom: 25px;
+    text-indent: -1.5em;
+    padding-left: 1.5em;
+}
+
+body.works-cited-page .WorksCited a {
+    color: #cba230;
+    text-decoration: none;
+}
+
+body.works-cited-page .WorksCited a:hover {
+    color: #e5c04a;
+    text-decoration: underline;
+}
+
+/* =====================================
+   ABOUT US PAGE
+   ===================================== */
+body.about-page {
+    background-color: #17344e;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.about-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 100px auto 50px auto;
+    padding: 0 20px;
+}
+
+.about-header h1 {
+    text-align: center;
+    font-size: 50px;
+    font-weight: lighter;
+    margin-bottom: 40px;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.about-text p {
+    font-size: 20px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+/* TEAM SECTIONS */
+.about-team {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.about-team h2 {
+    font-size: 40px;
+    color: #ffffff;
+    font-weight: lighter;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+.about-team .section-divider {
+    border: none;
+    height: 2px;
+    background-color: #cba230;
+    margin: 60px 0;
+}
+
+.team-members {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.team-member {
+    width: 250px;
+    text-align: center;
+}
+
+.team-member img {
+    width: 200px;        /* fixed width */
+    height: 200px;       /* same as width to make square */
+    border-radius: 5%;  /* squircle shape */
+    margin-bottom: 15px;
+    object-fit: cover;   /* fills the square without stretching */
+}
+
+.team-member h3 {
+    font-size: 25px;
+    margin: 10px 0 5px 0;
+    color: #ffffff;
+}
+
+.team-member p {
+    font-size: 18px;
+    color: #cba230;
+    margin: 0;
+}
+
+/* ANONYMOUS CONTRIBUTORS */
+.about-anonymous {
+    max-width: 800px;
+    margin: 80px auto 60px auto;
+    text-align: center;
+    padding: 0 20px;
+    color: #f5f5f5;
+}
+
+.about-anonymous h2 {
+    font-size: 35px;
+    font-weight: lighter;
+    color: #ffffff;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+.about-anonymous p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #cba230;
+    text-align: justify;
+}
+
+.team-member {
+    width: 250px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Image stays the same */
+.team-member img {
+    width: 200px;
+    height: 200px;
+    border-radius: 5%;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 10px; /* spacing before credit area */
+}
+
+/* Credit container with fixed height */
+.team-member > .team-credit {
+    font-size: 11px !important;
+    color: #cba230;
+    font-style: italic;
+    height: 16px;         /* fixed height ensures space even if empty */
+    margin-bottom: 5px;   /* spacing before name */
+}
+
+/* Name (h3) now always aligned */
+.team-member > h3 {
+    font-size: 25px;
+    margin: 0;
+    color: #ffffff;
+}
+
+.ipc-members {
+    display: flex;             /* flex layout */
+    justify-content: center;   /* center row */
+    flex-wrap: nowrap;         /* prevent wrapping to new line */
+    gap: 50px;                 /* space between members */
+    margin-bottom: 50px;
+}
+
+.team-members a{
+    text-decoration: underline;
+    color: inherit;
+}
+
+.team-members a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
