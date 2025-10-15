@@ -517,10 +517,9 @@ body.about-page {
     margin: 60px auto;
 }
 
-.about-video video {
-    width: 80%;
-    max-width: 900px;
-    height: auto;
+.about-video iframe {
+    width: 720px;
+    aspect-ratio: 16 / 9;  /* Maintains 16:9 video proportions */
     border-radius: 10px;
     border: 2px solid #cba230;
     box-shadow: 0 0 20px rgba(0,0,0,0.4);
