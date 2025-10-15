@@ -6,6 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | YungPolitics</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Remove team-credit class spacing since we're removing those elements */
+        .team-member > .team-credit {
+            display: none;
+        }
+
+        /* Adjust h3 margin since credit is gone */
+        .team-member > h3 {
+            margin-top: 10px;
+        }
+
+        /* Footnotes section styling */
+        .image-footnotes {
+            max-width: 800px;
+            margin: 60px auto 40px auto;
+            padding: 30px 20px;
+            border-top: 2px solid #cba230;
+        }
+
+        .image-footnotes h2 {
+            font-size: 30px;
+            color: #ffffff;
+            font-weight: lighter;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .image-footnotes ol {
+            list-style-position: outside;
+            padding-left: 25px;
+            color: #f5f5f5;
+        }
+
+        .image-footnotes li {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #cba230;
+        }
+
+        /* Superscript styling for footnote references */
+        .footnote-ref {
+            font-size: 0.75em;
+            vertical-align: super;
+            color: #cba230;
+            text-decoration: none;
+            margin-left: 2px;
+        }
+
+        .footnote-ref:hover {
+            color: #e5c04a;
+        }
+    </style>
 </head>
 <body class="about-page">
 
@@ -19,9 +73,10 @@
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="domestic.html">US Domestic</a></li>
-            <li><a href="foreign.html">US Foreign</a></li>
+            <li><a href="foreign.html">US Foreign Policy</a></li>
             <li><a href="local.html">Local</a></li>
             <li><a href="international.html">International</a></li>
+            <li><a href="Emergency.html">Emergency Statements</a></li>
             <li><a href="AboutUs.html">About Us</a></li>
         </ul>
     </nav>
@@ -34,15 +89,26 @@
 
         <!-- About description -->
         <section class="about-text">
-            <p>Welcome to <strong>YungPolitics</strong>, your go-to source for insightful coverage of domestic and international politics. Our mission is to present clear, unbiased reporting that empowers readers to make informed decisions and engage meaningfully with the political process.</p>
+            <p>Welcome to <strong>The YUNity Project</strong>. Our mission is to unite our divided socity by developing carefully curated research writings that focus on the facts.</p>
             
-            <p>Founded in 2024 by a team of passionate writers and political enthusiasts, we aim to break down complex political events and provide context that matters. From in-depth analysis of federal policy to local governance and global affairs, we strive to cover the stories shaping our world.</p>
+            <p>Founded in 2025, by a team of young-adults, the senior leadership is focused on bringing you unbiased research articles, opinion pieces, emergency statements, podcast episodes, and public interviews.</p>
             
-            <p>At YungPolitics, we believe that knowledge is power, and transparency is essential. We are committed to bringing you accurate, engaging, and thought-provoking content while maintaining integrity and professionalism in everything we do.</p>
+            <p>At The YUNity Project, we are committed to our motto "Veritas vos liberabit" "...the truth shall set you free". We promise to "tell the truth, the whole truth, and nothing but the truth, so help us god" (California Oath of Sworn Testimony).</p>
+
+            <p>We achieve the truth by conducting nonpartisan research about specific policy areas. We insure non partisanship by having the Independent Publication Commission (IPC) wing of The YUNity Project vote on research articles and emergency statements to maintain a sense of truth and ensure the absence of bias within our works.</p>
         </section>
 
         <!-- Divider -->
         <hr class="section-divider">
+
+        <!-- Embedded Video -->
+        <div class="about-video">
+            <video controls>
+                <source src="YUNity Project Trailer.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
 
         <!-- Team section -->
         <section class="about-team">
@@ -53,52 +119,46 @@
             <div class="team-members">
                 <div class="team-member">
                     <img src="Hajoon.jpg" alt='"Hajoon "HJ" Yun"' style="object-position: 0% 20%;">
-                    <p class="team-credit">HJ Yun</p>
                     <h3><a href=hj.html>Hajoon "HJ" Yun</a></h3>
                     <p>Founder, President, Chief Reporter</p>
                 </div>
 
                 <div class="team-member">
                     <img src="Schuyler.jpg" alt="Elizabeth Schuyler">
-                    <p class="team-credit">"Hamilton, Mrs. Alexander (seated pose)" by Unknown 1781 PD-US</p>
-                    <h3>Elizabeth Schuyler</h3>
+                    <h3>Elizabeth Schuyler<a href="#footnote-1" class="footnote-ref">[1]</a></h3>
                     <p>Vice President, Chair of the Editorial Board</p>
                 </div>
 
                 <div class="team-member">
                     <img src="Abigail_Adams.jpg" alt="Abigail Adams">
-                    <p class="team-credit">"Depicted person: Abigail Adams" by Benjamin Blyth 1766 PD-US</p>
-                    <h3>Abigail Adams</h3>
+                    <h3>Abigail Adams<a href="#footnote-2" class="footnote-ref">[2]</a></h3>
                     <p>Executive Press Secretary</p>
                 </div>
+            </div>
 
             <!-- Independent Publication Committee -->
             <h2>Independent Publication Committee</h2>
             <div class="team-members ipc-members">
                 <div class="team-member">
                     <img src="James_Madison.jpg.webp" alt="James Madison">
-                    <p class="team-credit">"James Madison" by John Vanderlyn 1816 PD-US</p>
-                    <h3>James Madison</h3>
+                    <h3>James Madison<a href="#footnote-3" class="footnote-ref">[3]</a></h3>
                     <p>Chairman of IPC, Webmaster</p>
                 </div>
 
                 <div class="team-member">
                     <img src="Suk Mitta.jpg" alt='Sukhadeva "Suk" Mitta' style="object-position: top;">
-                    <p class="team-credit">Suk</p>
                     <h3>Sukhadeva "Suk" Mitta</h3>
                     <p>IPC Secretary</p>
                 </div>
 
                 <div class="team-member">
                     <img src="Martha_Washington.jpg" alt="Martha Washington">
-                    <p class="team-credit">"Martha Washington" by Unknown PD-US</p>
-                    <h3>Martha Washington</h3>
+                    <h3>Martha Washington<a href="#footnote-4" class="footnote-ref">[4]</a></h3>
                     <p>IPC Voting Member</p>
                 </div>
 
                 <div class="team-member">
                     <img src="Aidan Farish.jpg" alt="Aidan Farish" class="zoomed-face">
-                    <p class="team-credit">Aidan</p>
                     <h3>Aidan Farish</h3>
                     <p>IPC Voting Member</p>
                 </div>
@@ -112,20 +172,19 @@
                 <div class="team-members">
                     <div class="team-member">
                         <img src="Thomas_Paine.jpg" alt="Thomas Paine">
-                        <p class="team-credit">"Thomas Paine (1737-1809)" by Auduste Millière, George Romney, William Sharp 1792 PD-US</p>
-                        <h3>Thomas Paine</h3>
+                        <h3>Thomas Paine<a href="#footnote-5" class="footnote-ref">[5]</a></h3>
                         <p>Contributing Author</p>
                     </div>
                     <div class="team-member">
-                        <img src="team-member-5.jpg" alt="Maria Lopez">
-                        <h3>Maria Lopez</h3>
+                        <img src="Alessandra.jpg" alt="Alessandra Franco Reyes">
+                        <h3>Alessandra Franco Reyes</h3>
                         <p>Political Correspondent</p>
                     </div>
-                    <!-- Add more contributing authors as needed -->
                 </div>
             </div>
         </section>
-            <!-- Anonymous Members Section -->
+
+        <!-- Anonymous Members Section -->
         <section class="about-anonymous">
             <h2>Anonymous Contributors</h2>
             <p>
@@ -133,6 +192,18 @@
 Let this serve as a reminder, politics - especially in America - should never be a field where people are afraid to speak up for their beliefs. The extremism on both sides has led to this unfortunate decision. 
 Nevertheless, the YUNity Project will continue to provide balanced, fact-driven journalism and research to all communities. 
             </p>
+        </section>
+
+        <!-- Image Citations Footnotes -->
+        <section class="image-footnotes">
+            <h2>Image Credits</h2>
+            <ol>
+                <li id="footnote-1">"Hamilton, Mrs. Alexander (seated pose)" by Unknown 1781 PD-US</li>
+                <li id="footnote-2">"Depicted person: Abigail Adams" by Benjamin Blyth 1766 PD-US</li>
+                <li id="footnote-3">"James Madison" by John Vanderlyn 1816 PD-US</li>
+                <li id="footnote-4">"Martha Washington" by Unknown PD-US</li>
+                <li id="footnote-5">"Thomas Paine (1737-1809)" by Auduste Millière, George Romney, William Sharp 1792 PD-US</li>
+            </ol>
         </section>
     </main>
 

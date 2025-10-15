@@ -3,7 +3,7 @@
    ===================================== */
 body {
     margin: 0;
-    font-family: "Calibri", serif;
+    font-family: "Calibri", sans-serif;
 }
 main {
     margin: 20px;
@@ -19,6 +19,11 @@ main {
     background-color: #17344e;
     height: 100%;
     width: 100%;
+}
+
+/* Apply Times New Roman to all headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Times New Roman", Times, serif;
 }
 
 /* =====================================
@@ -56,6 +61,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .header-solid {
@@ -92,6 +98,7 @@ main {
     color: whitesmoke;
     text-decoration: none;
     text-align: center;
+    font-family: "Times New Roman", sans-serif;
 }
 
 .navbar a:hover {
@@ -121,11 +128,17 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.article h2 {
+    font-family: "Times New Roman", Times, serif;
 }
 
 .article h2 a {
     color: #ffffff;
     text-decoration: none;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .article h2 a:hover {
@@ -156,6 +169,7 @@ main {
     text-decoration: none;
     letter-spacing: 1px;
     display: inline-block;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .article-citations a:hover {
@@ -179,6 +193,7 @@ main {
     color: #ffffff;
     margin: 0 auto 0 auto;
     width: 75%;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .Author {
@@ -188,11 +203,13 @@ main {
     margin: -80px auto 0 auto;
     width: 45%;
     text-decoration: none;
+    font-family: "Calibri", sans-serif;
 }
 
 .Author a {
     color: #295f8f;
     text-decoration: underline;
+    font-family: "Calibri", sans-serif;
 }
 
 .KirkImage {
@@ -230,6 +247,7 @@ main {
     width: 45%;
     text-align: left;
     display: block;
+    font-family: "Calibri", sans-serif;
 }
 
 .Text {
@@ -239,6 +257,7 @@ main {
     width: 50%;
     text-align: left;
     display: block;
+    font-family: "Calibri", sans-serif;
 }
 
 /* =====================================
@@ -253,11 +272,17 @@ main {
     font-size: 20px;
     line-height: 1.8;
     color: #f5f5f5;
+    font-family: "Calibri", sans-serif;
+}
+
+.Citations h2 {
+    font-family: "Times New Roman", Times, serif;
 }
 
 .Citations h2 a {
     color: #ffffff;
     text-decoration: none;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .Citations h2 a:hover {
@@ -280,6 +305,7 @@ body.works-cited-page .WorksCited {
     font-size: 20px;
     line-height: 1.8;
     color: #f5f5f5;
+    font-family: "Calibri", sans-serif;
 }
 
 body.works-cited-page .WorksCited h1 {
@@ -291,17 +317,20 @@ body.works-cited-page .WorksCited h1 {
     border-bottom: 2px solid #cba230;
     padding-bottom: 10px;
     letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 body.works-cited-page .WorksCited p {
     margin-bottom: 25px;
     text-indent: -1.5em;
     padding-left: 1.5em;
+    font-family: "Calibri", sans-serif;
 }
 
 body.works-cited-page .WorksCited a {
     color: #cba230;
     text-decoration: none;
+    font-family: "Calibri", sans-serif;
 }
 
 body.works-cited-page .WorksCited a:hover {
@@ -334,6 +363,7 @@ body.about-page {
     margin-bottom: 40px;
     color: #ffffff;
     letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .about-text p {
@@ -341,6 +371,7 @@ body.about-page {
     line-height: 1.8;
     margin-bottom: 25px;
     text-align: justify;
+    font-family: "Calibri", sans-serif;
 }
 
 /* TEAM SECTIONS */
@@ -355,6 +386,7 @@ body.about-page {
     font-weight: lighter;
     margin-bottom: 40px;
     letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .about-team .section-divider {
@@ -389,12 +421,14 @@ body.about-page {
     font-size: 25px;
     margin: 10px 0 5px 0;
     color: #ffffff;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .team-member p {
     font-size: 18px;
     color: #cba230;
     margin: 0;
+    font-family: "Calibri", sans-serif;
 }
 
 /* ANONYMOUS CONTRIBUTORS */
@@ -412,6 +446,7 @@ body.about-page {
     color: #ffffff;
     margin-bottom: 25px;
     letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .about-anonymous p {
@@ -419,6 +454,7 @@ body.about-page {
     line-height: 1.8;
     color: #cba230;
     text-align: justify;
+    font-family: "Calibri", sans-serif;
 }
 
 .team-member {
@@ -446,6 +482,7 @@ body.about-page {
     font-style: italic;
     height: 16px;         /* fixed height ensures space even if empty */
     margin-bottom: 5px;   /* spacing before name */
+    font-family: "Calibri", sans-serif;
 }
 
 /* Name (h3) now always aligned */
@@ -453,6 +490,7 @@ body.about-page {
     font-size: 25px;
     margin: 0;
     color: #ffffff;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .ipc-members {
@@ -466,20 +504,132 @@ body.about-page {
 .team-members a{
     text-decoration: underline;
     color: inherit;
+    font-family: "Times New Roman", Times, serif;
 }
 
 .team-members a:hover {
     text-decoration: underline;
 }
 
+.about-video {
+    display: flex;
+    justify-content: center;
+    margin: 60px auto;
+}
 
+.about-video video {
+    width: 80%;
+    max-width: 900px;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid #cba230;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+/* =====================================
+   ABOUT HAJOON PAGE
+   ===================================== */
+/* Hajoon Section */
+.Hajoon {
+    display: flex;
+    align-items: flex-start; /* aligns top of image and text */
+    gap: 40px;               /* space between image and text */
+    margin: 60px auto;       /* centers the section horizontally */
+    max-width: 1100px;       /* prevents section from being too wide */
+    padding: 0 20px;         /* some horizontal padding */
+}
 
+.HajoonImage {
+    width: 500px;            /* fixed width */
+    height: auto;            /* scales proportionally */
+    border-radius: 10px;
+    object-fit: cover;       /* ensures image covers the box */
+}
 
+.HajoonText {
+    max-width: 550px;
+    color: #ffffff;
+}
 
+.HajoonText h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #cba230;
+    font-family: "Times New Roman", Times, serif;
+}
 
+.HajoonText p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: justify;
+    font-family: "Calibri", sans-serif;
+}
 
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .Hajoon {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
 
+    .HajoonText {
+        max-width: 100%;
+    }
 
+    .HajoonImage {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+}
 
+/* =====================================
+   EMERGENCY STATEMENT PAGE
+   ===================================== */
+/* Emergency content styling */
+.emergency-content {
+    position: relative;
+    z-index: 10;
+    padding: 40px 20px;
+    text-align: center;
+}
 
+.emergency-content h1 {
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: lighter;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
+}
 
+/* Emergency page images */
+.emergency-photos {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: center;
+    gap: 30px;
+    margin: 40px 0;
+    z-index: 5;
+}
+
+.emergency-photos a {
+    display: block; /* ensure anchor wraps the image properly */
+}
+
+.emergency-photos img {
+    width: 400px;           /* adjust as needed */
+    height: auto;
+    display: block !important; 
+    opacity: 1 !important; 
+    visibility: visible !important; 
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.emergency-photos img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
