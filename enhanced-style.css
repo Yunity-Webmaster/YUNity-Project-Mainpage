@@ -1,0 +1,955 @@
+/* =====================================
+   GLOBAL STYLES
+   ===================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Calibri", sans-serif;
+    background-color: #17344e;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Times New Roman", Times, serif;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* =====================================
+   ENHANCED HEADER
+   ===================================== */
+.header-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #17344e 0%, #2a5278 100%);
+}
+
+.header-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px);
+}
+
+.header-text {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.header-text h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 52px;
+    font-weight: 300;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    animation: fadeInDown 0.8s ease;
+}
+
+.header-tagline {
+    font-size: 18px;
+    color: #cba230;
+    font-style: italic;
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+/* =====================================
+   STICKY NAVIGATION
+   ===================================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #cba230;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+}
+
+.nav-links a {
+    display: block;
+    padding: 18px 20px;
+    color: whitesmoke;
+    text-decoration: none;
+    font-family: "Times New Roman", sans-serif;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: whitesmoke;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    background-color: #705a1c;
+}
+
+.nav-links a:hover::after {
+    width: 80%;
+}
+
+/* Mobile Menu */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: whitesmoke;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-box {
+    padding: 8px 15px;
+    border: 2px solid whitesmoke;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    color: whitesmoke;
+    font-size: 14px;
+    width: 200px;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus {
+    outline: none;
+    background: rgba(255,255,255,0.2);
+    width: 250px;
+}
+
+.search-box::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+/* =====================================
+   MAIN CONTENT
+   ===================================== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Mission Statement */
+.mission {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, rgba(203,162,48,0.1) 0%, rgba(203,162,48,0.05) 100%);
+    border-radius: 15px;
+    margin-bottom: 60px;
+    animation: fadeIn 1s ease;
+}
+
+.mission h2 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: #cba230;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* =====================================
+   ARTICLES GRID
+   ===================================== */
+.articles-section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #cba230, transparent);
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.article-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(203,162,48,0.2);
+}
+
+.article-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: #cba230;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.article-image {
+    width: 100%;
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.article-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.KirkImage {
+    background-image: url("President_Donald_Trump_attends_the_Memorial_Service_for_Charlie_Kirk.jpg");
+}
+
+.ShutdownImage {
+    background-image: url("Capitol_Building.jpg");
+}
+
+.article-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #cba230;
+    color: #17344e;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+}
+
+.article-content {
+    padding: 30px;
+}
+
+.article-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #cba230;
+    flex-wrap: wrap;
+}
+
+.article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.article-title {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #ffffff;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.article-card:hover .article-title {
+    color: #cba230;
+}
+
+.article-excerpt {
+    color: rgba(255,255,255,0.8);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #cba230;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: gap 0.3s ease;
+}
+
+.article-card:hover .read-more {
+    gap: 12px;
+}
+
+/* =====================================
+   ARTICLE PAGE STYLES
+   ===================================== */
+.article-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.article-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.article-page-title {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.article-author {
+    font-size: 18px;
+    color: #cba230;
+    margin-bottom: 10px;
+}
+
+.article-author a {
+    color: #cba230;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.article-author a:hover {
+    border-bottom-color: #cba230;
+}
+
+.article-featured-image {
+    width: 100%;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    margin: 30px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.image-credit {
+    color: #cba230;
+    font-size: 14px;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.article-body {
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 1.8;
+    margin-top: 40px;
+}
+
+.article-body p {
+    margin-bottom: 25px;
+}
+
+.article-citations {
+    text-align: center;
+    margin: 60px auto 40px;
+    padding-top: 40px;
+    border-top: 2px solid #cba230;
+}
+
+.article-citations a {
+    color: #cba230;
+    font-size: 24px;
+    text-decoration: none;
+    font-weight: 300;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.article-citations a:hover {
+    color: #e5c04a;
+}
+
+/* Social Share Buttons */
+.social-share {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.share-btn {
+    padding: 12px 24px;
+    background: rgba(203,162,48,0.2);
+    color: #cba230;
+    border: 2px solid #cba230;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.share-btn:hover {
+    background: #cba230;
+    color: #17344e;
+    transform: translateY(-2px);
+}
+
+/* =====================================
+   NEWSLETTER SECTION
+   ===================================== */
+.newsletter {
+    background: linear-gradient(135deg, #cba230 0%, #705a1c 100%);
+    padding: 60px 40px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 60px 0;
+}
+
+.newsletter h3 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: #17344e;
+    margin-bottom: 15px;
+}
+
+.newsletter p {
+    color: rgba(23,52,78,0.9);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.newsletter-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 15px 20px;
+    border: 2px solid rgba(23,52,78,0.3);
+    border-radius: 30px;
+    font-size: 16px;
+    background: rgba(255,255,255,0.9);
+}
+
+.newsletter-input:focus {
+    outline: none;
+    border-color: #17344e;
+}
+
+.newsletter-btn {
+    padding: 15px 40px;
+    background: #17344e;
+    color: whitesmoke;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.newsletter-btn:hover {
+    background: #0d1f2d;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* =====================================
+   BACK TO TOP BUTTON
+   ===================================== */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #cba230;
+    color: #17344e;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 99;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: #705a1c;
+    transform: translateY(-5px);
+}
+
+/* =====================================
+   ABOUT PAGE STYLES
+   ===================================== */
+body.about-page {
+    background-color: #17344e;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.about-header h1 {
+    text-align: center;
+    font-size: 50px;
+    font-weight: 300;
+    margin-bottom: 40px;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.about-text {
+    max-width: 900px;
+    margin: 0 auto 60px;
+}
+
+.about-text p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: rgba(255,255,255,0.9);
+}
+
+.section-divider {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cba230, transparent);
+    margin: 60px 0;
+}
+
+/* Team Section */
+.about-team {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.about-team h2 {
+    font-size: 40px;
+    color: #ffffff;
+    font-weight: 300;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+.team-members {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.team-member {
+    width: 250px;
+    text-align: center;
+}
+
+.team-member img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 4px solid #cba230;
+    transition: transform 0.3s ease;
+}
+
+.team-member:hover img {
+    transform: scale(1.05);
+}
+
+.team-member h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.team-member h3 a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.team-member h3 a:hover {
+    color: #cba230;
+}
+
+.team-member p {
+    font-size: 16px;
+    color: #cba230;
+}
+
+.about-video {
+    display: flex;
+    justify-content: center;
+    margin: 60px auto;
+}
+
+.about-video iframe {
+    width: 720px;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    border: 2px solid #cba230;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Emergency Page */
+.emergency-content {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.emergency-content h1 {
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: 300;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+.emergency-photos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.emergency-photos img {
+    width: 400px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.emergency-photos img:hover {
+    transform: scale(1.05);
+}
+
+/* Works Cited Page */
+body.works-cited-page {
+    background-color: #17344e;
+}
+
+.WorksCited {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px 20px;
+}
+
+.WorksCited h1 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: 300;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #cba230;
+    letter-spacing: 1px;
+}
+
+.WorksCited p {
+    color: rgba(255,255,255,0.9);
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-indent: -1.5em;
+    padding-left: 1.5em;
+}
+
+.WorksCited a {
+    color: #cba230;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.WorksCited a:hover {
+    color: #e5c04a;
+    text-decoration: underline;
+}
+
+/* =====================================
+   ANIMATIONS
+   ===================================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+   ===================================== */
+@media (max-width: 1024px) {
+    .header-text h1 {
+        font-size: 42px;
+    }
+
+    .articles-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .article-page-title {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        height: 150px;
+    }
+
+    .header-text {
+        padding: 40px 20px;
+    }
+
+    .header-text h1 {
+        font-size: 32px;
+    }
+
+    .header-tagline {
+        font-size: 16px;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #cba230;
+        flex-direction: column;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .search-box {
+        width: 150px;
+    }
+
+    .search-box:focus {
+        width: 180px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .mission h2 {
+        font-size: 28px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .article-page-title {
+        font-size: 32px;
+    }
+
+    .article-body {
+        font-size: 17px;
+    }
+
+    .article-featured-image {
+        height: 300px;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .newsletter-input {
+        min-width: 100%;
+    }
+
+    .team-members {
+        gap: 30px;
+    }
+
+    .about-video iframe {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-text h1 {
+        font-size: 26px;
+    }
+
+    .header-tagline {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .article-card {
+        margin: 0;
+    }
+
+    .article-content {
+        padding: 20px;
+    }
+
+    .article-title {
+        font-size: 20px;
+    }
+
+    .article-page-title {
+        font-size: 28px;
+    }
+
+    .article-body {
+        font-size: 16px;
+    }
+
+    .back-to-top {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .newsletter h3 {
+        font-size: 28px;
+    }
+
+    .emergency-photos img {
+        width: 100%;
+        max-width: 300px;
+    }
+}

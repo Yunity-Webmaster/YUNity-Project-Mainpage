@@ -4,22 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about The YUNity Project team and our mission for nonpartisan journalism.">
     <title>About Us | TheYUNityProject</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="enhanced-style.css">
     <style>
-        /* Remove team-credit class spacing since we're removing those elements */
-        .team-member > .team-credit {
-            display: none;
+        /* Override circular headshots to square */
+        .team-member img {
+            border-radius: 5% !important;
         }
 
-        /* Adjust h3 margin since credit is gone */
-        .team-member > h3 {
-            margin-top: 10px;
+        .footnote-ref {
+            font-size: 0.75em;
+            vertical-align: super;
+            color: #cba230;
+            text-decoration: none;
+            margin-left: 2px;
         }
 
-        /* Footnotes section styling */
+        .footnote-ref:hover {
+            color: #e5c04a;
+        }
+
         .image-footnotes {
-            max-width: 800px;
+            max-width: 900px;
             margin: 60px auto 40px auto;
             padding: 30px 20px;
             border-top: 2px solid #cba230;
@@ -28,7 +35,7 @@
         .image-footnotes h2 {
             font-size: 30px;
             color: #ffffff;
-            font-weight: lighter;
+            font-weight: 300;
             margin-bottom: 25px;
             text-align: center;
             letter-spacing: 1px;
@@ -46,50 +53,43 @@
             margin-bottom: 15px;
             color: #cba230;
         }
-
-        /* Superscript styling for footnote references */
-        .footnote-ref {
-            font-size: 0.75em;
-            vertical-align: super;
-            color: #cba230;
-            text-decoration: none;
-            margin-left: 2px;
-        }
-
-        .footnote-ref:hover {
-            color: #e5c04a;
-        }
     </style>
 </head>
 <body class="about-page">
-
-    <!-- Background overlay -->
-    <div class="background-container">
-        <div class="background-solid"></div>
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="domestic.html">US Domestic</a></li>
-            <li><a href="foreign.html">US Foreign Policy</a></li>
-            <li><a href="local.html">Local</a></li>
-            <li><a href="international.html">International</a></li>
-            <li><a href="Emergency.html">Emergency Statements</a></li>
-            <li><a href="AboutUs.html">About Us</a></li>
-        </ul>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="local.html">Local</a></li>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
+            </div>
+        </div>
     </nav>
 
     <main class="about-content">
-        <!-- Page header -->
         <header class="about-header">
             <h1>About Us</h1>
         </header>
 
-        <!-- About description -->
         <section class="about-text">
-            <p>Welcome to <strong>The YUNity Project</strong>. Our mission is to unite our divided socity by developing carefully curated research writings that focus on the facts.</p>
+            <p>Welcome to <strong>The YUNity Project</strong>. Our mission is to unite our divided society by developing carefully curated research writings that focus on the facts.</p>
             
             <p>Founded in 2025, by a team of young-adults, the senior leadership is focused on bringing you unbiased research articles, opinion pieces, emergency statements, podcast episodes, and public interviews.</p>
             
@@ -98,34 +98,27 @@
             <p>We achieve the truth by conducting nonpartisan research about specific policy areas. We insure non partisanship by having the Independent Publication Commission (IPC) wing of The YUNity Project vote on research articles and emergency statements to maintain a sense of truth and ensure the absence of bias within our works.</p>
         </section>
 
-        <!-- Divider -->
         <hr class="section-divider">
 
-        <!-- Embedded Video Section -->
         <div class="about-video">
-            <div class="about-video-wrapper">
-                <iframe 
-                    src="https://www.youtube.com/embed/Bh9rG0QU-6s" 
-                    title="YUNity Project Trailer"
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    referrerpolicy="strict-origin-when-cross-origin"
-                    allowfullscreen>
-                </iframe>
-            </div>
+            <iframe 
+                src="https://www.youtube.com/embed/Bh9rG0QU-6s" 
+                title="YUNity Project Trailer"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+            </iframe>
         </div>
 
-
-        <!-- Team section -->
         <section class="about-team">
             <h2>Our Team</h2>
 
-            <!-- Senior Leadership -->
             <h2>Senior Leadership</h2>
             <div class="team-members">
                 <div class="team-member">
-                    <img src="Hajoon.jpg" alt='"Hajoon "HJ" Yun"' style="object-position: 0% 20%;">
-                    <h3><a href=hj.html>Hajoon "HJ" Yun</a></h3>
+                    <img src="Hajoon.jpg" alt="Hajoon HJ Yun" style="object-position: 0% 20%;">
+                    <h3><a href="hj.html">Hajoon "HJ" Yun</a></h3>
                     <p>Founder, President, Chief Reporter</p>
                 </div>
 
@@ -142,9 +135,8 @@
                 </div>
             </div>
 
-            <!-- Independent Publication Committee -->
             <h2>Independent Publication Committee</h2>
-            <div class="team-members ipc-members">
+            <div class="team-members">
                 <div class="team-member">
                     <img src="James_Madison.jpg.webp" alt="James Madison">
                     <h3>James Madison<a href="#footnote-3" class="footnote-ref">[3]</a></h3>
@@ -152,7 +144,7 @@
                 </div>
 
                 <div class="team-member">
-                    <img src="Suk Mitta.jpg" alt='Sukhadeva "Suk" Mitta' style="object-position: top;">
+                    <img src="Suk Mitta.jpg" alt="Sukhadeva Suk Mitta" style="object-position: top;">
                     <h3>Sukhadeva "Suk" Mitta</h3>
                     <p>IPC Secretary</p>
                 </div>
@@ -164,7 +156,7 @@
                 </div>
 
                 <div class="team-member">
-                    <img src="Aidan Farish.jpg" alt="Aidan Farish" class="zoomed-face">
+                    <img src="Aidan Farish.jpg" alt="Aidan Farish">
                     <h3>Aidan Farish</h3>
                     <p>IPC Voting Member</p>
                 </div>
@@ -172,35 +164,26 @@
 
             <hr class="section-divider">
 
-            <!-- Contributing Authors -->
-            <div class="team-section">
-                <h2>Contributing Authors</h2>
-                <div class="team-members">
-                    <div class="team-member">
-                        <img src="Thomas_Paine.jpg" alt="Thomas Paine">
-                        <h3>Thomas Paine<a href="#footnote-5" class="footnote-ref">[5]</a></h3>
-                        <p>Contributing Author</p>
-                    </div>
-                    <div class="team-member">
-                        <img src="Alessandra.jpg" alt="Alessandra Franco Reyes">
-                        <h3>Alessandra Franco Reyes</h3>
-                        <p>Contributing Author</p>
-                    </div>
+            <h2>Contributing Authors</h2>
+            <div class="team-members">
+                <div class="team-member">
+                    <img src="Thomas_Paine.jpg" alt="Thomas Paine">
+                    <h3>Thomas Paine<a href="#footnote-5" class="footnote-ref">[5]</a></h3>
+                    <p>Contributing Author</p>
+                </div>
+                <div class="team-member">
+                    <img src="Alessandra.jpg" alt="Alessandra Franco Reyes">
+                    <h3>Alessandra Franco Reyes</h3>
+                    <p>Contributing Author</p>
                 </div>
             </div>
         </section>
 
-        <!-- Anonymous Members Section -->
-        <section class="about-anonymous">
-            <h2>Anonymous Contributors</h2>
-            <p>
-                *Why are some names and identities pseudonyms? Although the YUNity Project believes in nonpartisan, centrist journalism and politics, the current state of politics has led some members on staff to request that their identities remain anonymous. The YUNity Project will always put the safety of our staff above all else. 
-Let this serve as a reminder, politics - especially in America - should never be a field where people are afraid to speak up for their beliefs. The extremism on both sides has led to this unfortunate decision. 
-Nevertheless, the YUNity Project will continue to provide balanced, fact-driven journalism and research to all communities. 
-            </p>
+        <section class="about-text" style="margin-top: 60px; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <h2 style="text-align: center; color: #cba230; margin-bottom: 20px;">Anonymous Contributors</h2>
+            <p style="font-style: italic;">*Why are some names and identities pseudonyms? Although the YUNity Project believes in nonpartisan, centrist journalism and politics, the current state of politics has led some members on staff to request that their identities remain anonymous. The YUNity Project will always put the safety of our staff above all else. Let this serve as a reminder, politics - especially in America - should never be a field where people are afraid to speak up for their beliefs. The extremism on both sides has led to this unfortunate decision. Nevertheless, the YUNity Project will continue to provide balanced, fact-driven journalism and research to all communities.</p>
         </section>
 
-        <!-- Image Citations Footnotes -->
         <section class="image-footnotes">
             <h2>Image Credits</h2>
             <ol>
@@ -213,5 +196,8 @@ Nevertheless, the YUNity Project will continue to provide balanced, fact-driven 
         </section>
     </main>
 
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
+
+    <script src="enhanced-script.js"></script>
 </body>
 </html>

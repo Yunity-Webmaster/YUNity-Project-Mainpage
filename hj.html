@@ -4,46 +4,164 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Hajoon 'HJ' Yun, Founder and President of The YUNity Project">
     <title>Hajoon "HJ" Yun | TheYUNityProject</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="enhanced-style.css">
+    <style>
+        .hajoon-profile {
+            display: flex;
+            align-items: flex-start;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .hajoon-image {
+            flex-shrink: 0;
+        }
+
+        .hajoon-image img {
+            width: 450px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 3px solid #cba230;
+        }
+
+        .hajoon-content {
+            flex: 1;
+            color: #ffffff;
+        }
+
+        .hajoon-content h1 {
+            font-size: 42px;
+            font-weight: 300;
+            color: #cba230;
+            margin-bottom: 10px;
+        }
+
+        .hajoon-content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .hajoon-quote {
+            background: rgba(203,162,48,0.1);
+            border-left: 4px solid #cba230;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .hajoon-quote p {
+            font-size: 20px;
+            font-style: italic;
+            color: #cba230;
+            margin-bottom: 10px;
+        }
+
+        .hajoon-quote .quote-author {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            font-style: normal;
+        }
+
+        .hajoon-content .bio-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .hajoon-profile {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin: 60px auto;
+            }
+
+            .hajoon-image img {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .hajoon-content h1 {
+                font-size: 36px;
+            }
+
+            .hajoon-content h2 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hajoon-content h1 {
+                font-size: 32px;
+            }
+
+            .hajoon-content h2 {
+                font-size: 18px;
+            }
+
+            .bio-text {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body class="about-page">
-
-    <!-- Background overlay -->
-    <div class="background-container">
-        <div class="background-solid"></div>            
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="domestic.html">US Domestic</a></li>
-            <li><a href="foreign.html">US Foreign Policy</a></li>
-            <li><a href="local.html">Local</a></li>
-            <li><a href="international.html">International</a></li>
-            <li><a href="Emergency.html">Emergency Statements</a></li>
-            <li><a href="AboutUs.html">About Us</a></li>
-        </ul>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="local.html">Local</a></li>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
+            </div>
+        </div>
     </nav>
 
-    <!-- Hajoon Section -->
-    <main class="about-content">
-        <div class="Hajoon">
-            <!-- Image on the left -->
-            <img src="Hajoon2.jpg" alt='Hajoon "HJ" Yun' class="HajoonImage">
+    <main class="hajoon-profile">
+        <div class="hajoon-image">
+            <img src="Hajoon2.jpg" alt="Hajoon HJ Yun">
+        </div>
 
-            <!-- Text on the right -->
-            <div class="HajoonText">
-                <h2>Hajoon "HJ" Yun</h2>
-                <h2><strong>Founder, President, Chief Reporter</strong></h2>
+        <div class="hajoon-content">
+            <h1>Hajoon "HJ" Yun</h1>
+            <h2><strong>Founder, President, Chief Reporter</strong></h2>
+
+            <div class="hajoon-quote">
                 <p><strong>"A capacity to change is indispensable. Equally indispensable is the capacity to hold fast to that which is good."</strong></p>
-                <p>-John Foster Dulles, 52nd US Secretary of State</p>
-                <p>This is the guiding quote for my journey.</p>
-                <p>As an academically advanced student, I pride myself on being up to date on all the world's current events. My passion for international relations and politics began long before my academic career. Even in elementary school, I had many questions for my teacher about who ran the country.  As I started high school, I began to mature this passion and dig deep into the world of international relations. I have an academic record of not only taking government classes but also excelling in these classes. Over the summer between my sophomore and junior years, I had the privilege of attending Georgetown University's Summer Academy for International Relations. After returning from a wonderful 3-week excursion in Washington, DC, I was more motivated to pursue a career as a diplomat. Through ISM, I will display my depth of passion for international affairs and diplomacy. Through the YUNity Project, I aim to be at the forefront of the effort to reclaim our country from hyperpolarization and restore a period of calm, diplomatic governance.</p>
+                <p class="quote-author">-John Foster Dulles, 52nd US Secretary of State</p>
+                <p style="margin-top: 15px; font-style: normal; color: #ffffff;">This is the guiding quote for my journey.</p>
             </div>
+
+            <p class="bio-text">As an academically advanced student, I pride myself on being up to date on all the world's current events. My passion for international relations and politics began long before my academic career. Even in elementary school, I had many questions for my teacher about who ran the country. As I started high school, I began to mature this passion and dig deep into the world of international relations. I have an academic record of not only taking government classes but also excelling in these classes. Over the summer between my sophomore and junior years, I had the privilege of attending Georgetown University's Summer Academy for International Relations. After returning from a wonderful 3-week excursion in Washington, DC, I was more motivated to pursue a career as a diplomat. Through ISM, I will display my depth of passion for international affairs and diplomacy. Through the YUNity Project, I aim to be at the forefront of the effort to reclaim our country from hyperpolarization and restore a period of calm, diplomatic governance.</p>
         </div>
     </main>
 
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
+
+    <script src="enhanced-script.js"></script>
 </body>
 </html>

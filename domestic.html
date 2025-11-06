@@ -4,45 +4,82 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domestic News | TheYUNityProject</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="US Domestic news and analysis from The YUNity Project">
+    <title>US Domestic News | TheYUNityProject</title>
+    <link rel="stylesheet" href="enhanced-style.css">
 </head>
-
 <body>
-
-    <div class="background-container">
-        <div class="background-solid"></div>            
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
     </div>
 
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="domestic.html">US Domestic</a></li>
-            <li><a href="foreign.html">US Foreign Policy</a></li>
-            <li><a href="local.html">Local</a></li>
-            <li><a href="international.html">International</a></li>
-            <li><a href="Emergency.html">Emergency Statements</a></li>
-            <li><a href="AboutUs.html">About Us</a></li>
-        </ul>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="local.html">Local</a></li>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
+            </div>
+        </div>
     </nav>
 
-        <div class="article">
-        <div class="article headline">
-            <h2><a href="Article2.html">The Federal Government Shutdown: How a Lack of Compromise Led to Where We Are Today</a></h2>
-        </div>
-        <a href="Article2.html" target="_blank">
-            <div class="ShutdownImage"></div>
-        </a>
+    <div class="container">
+        <section class="articles-section">
+            <h2 class="section-title">US Domestic News</h2>
+            
+            <div class="articles-grid">
+                <article class="article-card">
+                    <a href="Article2.html" class="card-link">
+                        <div class="article-image ShutdownImage">
+                            <span class="article-category">US Domestic</span>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span>📅 October 10, 2025</span>
+                                <span>⏱️ 8 min read</span>
+                            </div>
+                            <h3 class="article-title">The Federal Government Shutdown: How a Lack of Compromise Led to Where We Are Today</h3>
+                            <p class="article-excerpt">An in-depth analysis of the 2025 federal government shutdown, examining the political gridlock and its impact on American citizens.</p>
+                            <span class="read-more">Read More →</span>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="article-card">
+                    <a href="Article1.html" class="card-link">
+                        <div class="article-image KirkImage">
+                            <span class="article-category">US Domestic</span>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span>📅 September 28, 2025</span>
+                                <span>⏱️ 6 min read</span>
+                            </div>
+                            <h3 class="article-title">How Charlie Kirk's Assassination Reveals a Disturbing Trend in American Politics</h3>
+                            <p class="article-excerpt">Examining the rise of political violence and polarization in America following a tragic national event.</p>
+                            <span class="read-more">Read More →</span>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </section>
     </div>
 
-    <div class="article">
-        <div class="article headline">
-            <h2><a href="Article1.html">How Charlie Kirk's Assassination Reveals a Disturbing Trend in American Politics</a></h2>
-        </div>
-        <a href="Article1.html" target="_blank">
-            <div class="KirkImage"></div>
-        </a>
-    </div>
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
+    <script src="enhanced-script.js"></script>
 </body>
 </html>

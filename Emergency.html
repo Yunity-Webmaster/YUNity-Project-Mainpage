@@ -4,25 +4,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Emergency statements and breaking news from The YUNity Project">
     <title>Emergency Statements | TheYUNityProject</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="enhanced-style.css">
 </head>
 <body>
-
-    <div class="background-container">
-        <div class="background-solid"></div>            
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
     </div>
 
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="domestic.html">US Domestic</a></li>
-            <li><a href="foreign.html">US Foreign Policy</a></li>
-            <li><a href="local.html">Local</a></li>
-            <li><a href="international.html">International</a></li>
-            <li><a href="Emergency.html">Emergency Statements</a></li>
-            <li><a href="AboutUs.html">About Us</a></li>
-        </ul>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="local.html">Local</a></li>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
+            </div>
+        </div>
     </nav>
 
     <main class="emergency-content">
@@ -30,23 +41,25 @@
 
         <div class="emergency-photos">
             <a href="https://www.instagram.com/p/DPnCgcEDHyy/" target="_blank">
-                <img src="PalestineCeasefire.png" alt="PalestineCeasefire">
+                <img src="PalestineCeasefire.png" alt="Palestine Ceasefire Statement">
             </a>
             <a href="https://www.instagram.com/p/DPQMm2aDLFQ/" target="_blank">
-                <img src="GovShutdown.png" alt="GovShutdown">
+                <img src="GovShutdown.png" alt="Government Shutdown Statement">
             </a>
             <a href="https://www.instagram.com/p/DPMnptQgcfi/" target="_blank">
-                <img src="MormonAttack.png" alt="MormonAttack">
+                <img src="MormonAttack.png" alt="Mormon Attack Statement">
             </a>
             <a href="https://www.instagram.com/p/DPG4EDaDmzl/" target="_blank">
-                <img src="ICEShooting.png" alt="ICEShooting">
+                <img src="ICEShooting.png" alt="ICE Shooting Statement">
             </a>
             <a href="https://www.instagram.com/p/DOumSMrDN8a/" target="_blank">
-                <img src="PennShooting.png" alt="PennShooting">
+                <img src="PennShooting.png" alt="Penn Shooting Statement">
             </a>
         </div>
     </main>
 
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
+    <script src="enhanced-script.js"></script>
 </body>
 </html>
