@@ -1,4 +1,9 @@
 /* =====================================
+   IMPORT GOOGLE FONTS
+   ===================================== */
+@import url('https://fonts.googleapis.com/css2?family=Allura&display=swap');
+
+/* =====================================
    GLOBAL STYLES
    ===================================== */
 * {
@@ -40,8 +45,7 @@ img {
     width: 100%;
     height: 100%;
     opacity: 0.1;
-    background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px);
 }
 
 .header-text {
@@ -90,29 +94,50 @@ img {
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
+    gap: 20px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #17344e;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
 }
 
 .nav-links {
     display: flex;
+    align-items: center;
     list-style: none;
     gap: 5px;
 }
 
-.nav-links a {
-    display: block;
+.nav-links a,
+.nav-links button.dropbtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 18px 20px;
     color: whitesmoke;
     text-decoration: none;
     font-family: "Times New Roman", sans-serif;
     font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    height: 100%;
+    line-height: 1;
 }
 
-.nav-links a::after {
+.nav-links a::after,
+.nav-links button.dropbtn::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 6px;
     left: 50%;
     width: 0;
     height: 3px;
@@ -121,15 +146,52 @@ img {
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links button.dropbtn:hover {
     background-color: #705a1c;
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links button.dropbtn:hover::after {
     width: 80%;
 }
 
-/* Mobile Menu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #2a5278;
+    min-width: 180px;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+    z-index: 999;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    padding: 14px 18px;
+    color: whitesmoke;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #17344e;
+}
+
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+
 .mobile-toggle {
     display: none;
     background: none;
@@ -140,11 +202,11 @@ img {
     padding: 10px;
 }
 
-/* Search Bar */
 .search-container {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
 }
 
 .search-box {
@@ -168,6 +230,37 @@ img {
     color: rgba(255,255,255,0.7);
 }
 
+/* Search Results Dropdown */
+.search-results {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #2a5278;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    max-width: 400px;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.search-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: #cba230;
+    border-radius: 10px;
+}
+
 /* =====================================
    MAIN CONTENT
    ===================================== */
@@ -177,7 +270,6 @@ img {
     padding: 40px 20px;
 }
 
-/* Mission Statement */
 .mission {
     text-align: center;
     padding: 60px 20px;
@@ -188,6 +280,42 @@ img {
 }
 
 .mission h2 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: #cba230;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.welcome {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, rgba(203,162,48,0.1) 0%, rgba(203,162,48,0.05) 100%);
+    border-radius: 15px;
+    margin-bottom: 60px;
+    animation: fadeIn 1s ease;
+}
+
+.welcome p {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 25px;
+    font-weight: 300;
+    color: #cba230;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.welcome h3 {
+    font-family: "Allura", cursive;
+    font-size: 48px;
+    font-weight: 400;
+    color: #cba230;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.welcome h2 {
     font-family: "Times New Roman", Times, serif;
     font-size: 36px;
     font-weight: 300;
@@ -446,6 +574,7 @@ img {
     gap: 15px;
     justify-content: center;
     margin: 40px 0;
+    flex-wrap: wrap;
 }
 
 .share-btn {
@@ -458,6 +587,8 @@ img {
     font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: "Calibri", sans-serif;
 }
 
 .share-btn:hover {
@@ -531,6 +662,52 @@ img {
     background: #0d1f2d;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.newsletter-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =====================================
+   NOTIFICATION SYSTEM
+   ===================================== */
+.custom-notification {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    background: #17344e;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10000;
+    font-size: 16px;
+    font-weight: 500;
+    max-width: 400px;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
 }
 
 /* =====================================
@@ -609,7 +786,6 @@ body.about-page {
     margin: 60px 0;
 }
 
-/* Team Section */
 .about-team {
     text-align: center;
     margin-top: 60px;
@@ -639,7 +815,7 @@ body.about-page {
 .team-member img {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    border-radius: 5%;
     object-fit: cover;
     margin-bottom: 20px;
     border: 4px solid #cba230;
@@ -840,12 +1016,16 @@ body.works-cited-page {
         display: flex;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links button.dropbtn {
         padding: 15px 20px;
         border-bottom: 1px solid rgba(255,255,255,0.1);
+        width: 100%;
+        justify-content: flex-start;
     }
 
-    .nav-links a::after {
+    .nav-links a::after,
+    .nav-links button.dropbtn::after {
         display: none;
     }
 
@@ -861,6 +1041,10 @@ body.works-cited-page {
         width: 180px;
     }
 
+    .search-results {
+        max-width: 300px;
+    }
+
     .articles-grid {
         grid-template-columns: 1fr;
         gap: 30px;
@@ -868,6 +1052,10 @@ body.works-cited-page {
 
     .mission h2 {
         font-size: 28px;
+    }
+
+    .welcome h3 {
+        font-size: 36px;
     }
 
     .section-title {
@@ -900,6 +1088,25 @@ body.works-cited-page {
 
     .about-video iframe {
         width: 100%;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background-color: #705a1c;
+        border-radius: 0;
+        display: none;
+        width: 100%;
+    }
+
+    .dropdown.open .dropdown-content {
+        display: block;
+    }
+
+    .custom-notification {
+        right: 15px;
+        left: 15px;
+        max-width: none;
     }
 }
 
@@ -948,8 +1155,17 @@ body.works-cited-page {
         font-size: 28px;
     }
 
+    .newsletter-btn {
+        width: 100%;
+    }
+
     .emergency-photos img {
         width: 100%;
         max-width: 300px;
+    }
+
+    .share-btn {
+        padding: 10px 18px;
+        font-size: 13px;
     }
 }

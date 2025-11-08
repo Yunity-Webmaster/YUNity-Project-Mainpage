@@ -17,7 +17,7 @@
         <div class="header-pattern"></div>
         <div class="header-text">
             <h1>The YUNity Project</h1>
-            <p class="header-tagline">Veritas vos liberabit - The truth shall set you free</p>
+            <p class="header-tagline">Veritas vos liberabit</p>
         </div>
     </div>
 
@@ -29,7 +29,14 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="domestic.html">US Domestic</a></li>
                 <li><a href="foreign.html">US Foreign Policy</a></li>
-                <li><a href="local.html">Local</a></li>
+                    <!-- Dropdown section -->
+                <div class="dropdown">
+                    <button class="dropbtn">Local ▾</button>
+                    <div class="dropdown-content">
+                        <li><a href="Local.html">Local News</a></li>
+                        <li><a href="Election.html">2025 Election</a></li>
+                    </div>
+                </div>
                 <li><a href="international.html">International</a></li>
                 <li><a href="Emergency.html">Emergency Statements</a></li>
                 <li><a href="oped.html">Opinion</a></li>
@@ -90,18 +97,23 @@
                 </article>
             </div>
         </section>
-
+        <!--Welcome Statement-->
+        <section class="welcome">
+            <p>“In a democracy, truth and education stand as pillars. When these pillars are threatened, our democracy is threatened. In a society where extremism has become mainstream, people must be able to realize that a difference in opinion is inevitable and must be well-managed. The founders of the United States framed our government with civil discourse at its core. The greatest and brightest moments in our nation’s history were those marked by compromise. A willingness to have an open mind is the essential ingredient in the great American experiment. The YUNity Project is more than just another organization; it’s a mission that anybody and everybody can join in this pursuit for truth. I hope that even in the darkest of times, we can realize the YUNity Project’s motto: veritas vos liberabit, the truth shall set you free.”</p>
+            <h3>H. Yun</h3>
+            <h2>Hajoon "HJ" Yun</h2>
+            <p>Founder, President, Chief Reporter</p>
+        </section>
         <!-- Newsletter Signup -->
         <section class="newsletter">
             <h3>Stay Informed</h3>
             <p>Subscribe to our newsletter for nonpartisan analysis and fact-driven reporting</p>
-            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing! Feature coming soon.');">
-                <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Work In Progress" required>
                 <button type="submit" class="newsletter-btn">Subscribe</button>
             </form>
         </section>
     </div>
-
     <!-- Back to Top Button -->
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 

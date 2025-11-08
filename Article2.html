@@ -26,7 +26,14 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="domestic.html">US Domestic</a></li>
                 <li><a href="foreign.html">US Foreign Policy</a></li>
-                <li><a href="local.html">Local</a></li>
+                    <!-- Dropdown section -->
+                <div class="dropdown">
+                    <button class="dropbtn">Local ▾</button>
+                    <div class="dropdown-content">
+                        <li><a href="Local.html">Local News</a></li>
+                        <li><a href="Election.html">2025 Election</a></li>
+                    </div>
+                </div>
                 <li><a href="international.html">International</a></li>
                 <li><a href="Emergency.html">Emergency Statements</a></li>
                 <li><a href="oped.html">Opinion</a></li>
@@ -54,6 +61,7 @@
 
         <div class="article-body">
             <p>On October 1st, 2025, the US federal government officially shut down after Congress failed to pass a continuing resolution funding the government. This article will break down everything you need to know about the 2025 federal government shutdown.</p>
+
             <p>First, the US fiscal year ends on September 30th and starts on the next day, October 1st. To continue funding in the federal government, the US Congress, which holds the power of the purse (meaning the power to set a budget), must pass a budget for the next fiscal year by September 30th. According to the Antideficiency Act, amended in 1950, no federal agency may spend funds that aren't approved by Congress (Wessel). This means that no federal employee can authorize funds that have not been authorized by Congress yet. Although this law was meant to prevent misuse of federal funds, the law has recently been an obstacle to federal employees in working or providing support during government shutdowns.</p>
 
             <p>Although the current government shutdown is only partial, many aspects of the government will be different from normal operations. Some of the notable changes include the closure and suspension of certain national parks, Smithsonian museums (all will remain open until October 11), the suspension of CDC projects, and delays in airports due to a lack of TSA officers and air controllers (Zurcher). Other government services such as Social Security payments, Medicare, and the USPS will remain operational either in partial or in full.</p>
@@ -71,9 +79,10 @@
 
         <!-- Social Share Buttons -->
         <div class="social-share">
-            <a href="#" class="share-btn" onclick="event.preventDefault(); alert('Share on Twitter - Feature coming soon!');">🐦 Share</a>
-            <a href="#" class="share-btn" onclick="event.preventDefault(); alert('Share on Facebook - Feature coming soon!');">📘 Share</a>
-            <a href="#" class="share-btn" onclick="event.preventDefault(); alert('Copy link - Feature coming soon!');">🔗 Copy Link</a>
+            <button class="share-btn">🐦 Twitter</button>
+            <button class="share-btn">📘 Facebook</button>
+            <button class="share-btn">💼 LinkedIn</button>
+            <button class="share-btn">🔗 Copy Link</button>
         </div>
 
         <footer class="article-citations">
@@ -84,3 +93,5 @@
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
     <script src="enhanced-script.js"></script>
+</body>
+</html>
