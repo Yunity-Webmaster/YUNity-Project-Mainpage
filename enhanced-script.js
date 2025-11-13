@@ -140,17 +140,27 @@ if (searchBox) {
 }
 
 // =====================================
-// NEWSLETTER SIGNUP
+// NEWSLETTER SIGNUP WITH GOOGLE SHEETS
 // =====================================
+
+// REPLACE THIS with your Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBBXRcDhkOKq1tpYTyhMHp4GpmY48ROUJvwZyx_3IytDeHIzwbOOPGNb378a1MUofy6g/exec';
+
 const newsletterForm = document.querySelector('.newsletter-form');
 if (newsletterForm) {
+    // Update placeholder text
+    const emailInput = newsletterForm.querySelector('.newsletter-input');
+    if (emailInput && emailInput.placeholder === 'Work In Progress') {
+        emailInput.placeholder = 'Enter your email address';
+    }
+
     newsletterForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const emailInput = newsletterForm.querySelector('.newsletter-input');
         const submitBtn = newsletterForm.querySelector('.newsletter-btn');
         const email = emailInput.value.trim();
 
+        // Validate email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             showNotification('Please enter a valid email address', 'error');
@@ -162,14 +172,28 @@ if (newsletterForm) {
         submitBtn.textContent = 'Subscribing...';
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]');
-            if (!subscribers.includes(email)) {
-                subscribers.push(email);
-                localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers));
-            }
-            showNotification('✗ Subscription failed. Please try again later.', 'error');
+            // Send to Google Sheets
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Important for Google Apps Script
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    source: window.location.href
+                })
+            });
+
+            // Note: no-cors mode means we can't read the response
+            // But if no error was thrown, the request was sent successfully
+            showNotification('✓ Successfully subscribed to our newsletter!', 'success');
             emailInput.value = '';
+            
+            // Log success (without exposing email list)
+            console.log('Newsletter subscription submitted successfully');
+            
         } catch (error) {
             showNotification('✗ Subscription failed. Please try again later.', 'error');
             console.error('Newsletter subscription error:', error);
@@ -275,12 +299,11 @@ function fallbackCopyToClipboard(text) {
 }
 
 // =====================================
-// ATTACH SHARE BUTTON HANDLERS (FINAL FIX)
+// ATTACH SHARE BUTTON HANDLERS
 // =====================================
 document.addEventListener('DOMContentLoaded', () => {
     const shareButtons = document.querySelectorAll('.share-btn');
     if (!shareButtons.length) {
-        console.warn('No share buttons found');
         return;
     }
 
@@ -432,3 +455,4 @@ document.querySelectorAll('.dropdown > .dropbtn').forEach(btn => {
 // =====================================
 console.log('%cThe YUNity Project', 'color: #cba230; font-size: 24px; font-weight: bold;');
 console.log('%cVeritas vos liberabit - The truth shall set you free', 'color: #17344e; font-size: 14px;');
+console.log('%cNewsletter emails are securely stored in Google Sheets', 'color: #17344e; font-size: 12px;');
