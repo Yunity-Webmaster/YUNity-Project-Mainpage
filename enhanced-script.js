@@ -144,7 +144,7 @@ if (searchBox) {
 // =====================================
 
 // REPLACE THIS with your Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBBXRcDhkOKq1tpYTyhMHp4GpmY48ROUJvwZyx_3IytDeHIzwbOOPGNb378a1MUofy6g/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHIVxmoCcfefNPZ_mX8UDbgG2WpZPIG85NGyTUaeDhV9CB8wN1oLVs54oZgEC9i08_/exec';
 
 const newsletterForm = document.querySelector('.newsletter-form');
 if (newsletterForm) {
