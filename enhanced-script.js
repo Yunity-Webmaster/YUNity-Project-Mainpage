@@ -314,6 +314,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (label.includes('twitter') || label.includes('🐦')) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                // Track Twitter share event in Google Analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'share', {
+                        method: 'Twitter',
+                        content_type: 'article',
+                        item_id: document.title
+                    });
+                }
+                
                 const url = encodeURIComponent(window.location.href);
                 const text = encodeURIComponent('Check out this article from The YUNity Project: ');
                 window.open(
