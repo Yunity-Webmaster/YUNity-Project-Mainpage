@@ -320,7 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     gtag('event', 'share', {
                         method: 'Twitter',
                         content_type: 'article',
-                        item_id: document.title
+                        item_id: document.title,
+                        content_url: window.location.href
                     });
                 }
                 
@@ -338,6 +339,17 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (label.includes('instagram') || label.includes('📸')) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                // Track Instagram share event in Google Analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'share', {
+                        method: 'Instagram',
+                        content_type: 'article',
+                        item_id: document.title,
+                        content_url: window.location.href
+                    });
+                }
+                
                 const url = window.location.href;
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(url).then(() => {
@@ -358,6 +370,17 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (label.includes('copy') || label.includes('link') || label.includes('🔗')) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                // Track Copy Link event in Google Analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'share', {
+                        method: 'Copy Link',
+                        content_type: 'article',
+                        item_id: document.title,
+                        content_url: window.location.href
+                    });
+                }
+                
                 const url = window.location.href;
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(url).then(() => {
