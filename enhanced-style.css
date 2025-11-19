@@ -407,6 +407,10 @@ img {
     background-image: url("Capitol_Building.jpg");
 }
 
+.NewJerseyElectionImage {
+    background-image: url("NewJersey.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
@@ -535,6 +539,16 @@ img {
     font-style: italic;
     margin-top: 10px;
     text-align: center;
+    text-decoration: none;
+} 
+
+.image-credit a {
+    color: #cba230;
+    text-decoration: none !important;
+}
+
+a[href*="flickr"] {
+    text-decoration: none !important;
 }
 
 .article-body {
