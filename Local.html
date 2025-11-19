@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Page Title] | TheYUNityProject</title>
+    <link rel="stylesheet" href="enhanced-style.css">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2M32LXLLW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z2M32LXLLW');
+</script>
+<body>
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                    <!-- Dropdown section -->
+                <div class="dropdown">
+                    <button class="dropbtn">Local ▾</button>
+                    <div class="dropdown-content">
+                        <li><a href="Local.html">Local News</a></li>
+                        <li><a href="Election.html">2025 Election</a></li>
+                    </div>
+                </div>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="articles-section">
+            <h2 class="section-title">US Local News</h2>
+            
+            <div class="articles-grid">
+                <!-- Article 1 -->
+                <article class="article-card">
+                    <a href="NewJerseyElection.html" class="card-link">
+                        <div class="article-image NewJerseyElectionImage">
+                            <span class="article-category">US Domestic</span>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span>📅 November 18, 2025</span>
+                                <span>⏱️ 3 min read</span>
+                            </div>
+                            <h3 class="article-title">History Made: New Jersey's First Female Democratic Governor</h3>
+                            <p class="article-excerpt">A breakdown of the 2025 New Jersey governor election; who are the candidates, and what do they stand for?</p>
+                            <span class="read-more">Read More →</span>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
+    <script src="enhanced-script.js"></script>
+</body>
+</html>
