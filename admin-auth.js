@@ -1,9 +1,30 @@
 // Admin Authentication System
 
+// Simple hash function for password encryption
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+// Store hashed passwords instead of plain text
+// To generate a new hash, use: hashPassword('yourpassword').then(hash => console.log(hash))
 const ADMIN_USERS = [
-    { username: 'hjyun', password: 'yunity2025' },
-    { username: 'admin', password: 'veritas' }
+    { 
+        username: 'PrezYun', 
+        passwordHash: 'ad27f483bc7bdae6c8fd368c13b936be91074850ea3c45a80e44f5d1872fa41c'
+    },
+    {
+        username: "beneppo",
+        passwordHash: '7e88906961a1fd87f393c8b4eb92177649173895642367d675ae193cb46a8212'
+    },
 ];
+
+// Note: To create new password hashes, uncomment and run this in console:
+// hashPassword('yournewpassword').then(hash => console.log(hash));
 
 // Check if user is logged in
 function checkAuth() {
@@ -57,13 +78,19 @@ window.addEventListener('click', function(event) {
 // Handle login
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         
-        const user = ADMIN_USERS.find(u => u.username === username && u.password === password);
+        // Hash the entered password
+        const enteredPasswordHash = await hashPassword(password);
+        
+        // Find user with matching username and password hash
+        const user = ADMIN_USERS.find(u => 
+            u.username === username && u.passwordHash === enteredPasswordHash
+        );
         
         if (user) {
             sessionStorage.setItem('admin_logged_in', 'true');
