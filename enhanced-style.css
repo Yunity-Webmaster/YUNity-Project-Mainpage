@@ -411,6 +411,10 @@ img {
     background-image: url("NewJersey.jpg");
 }
 
+.Mamdani {
+    background-image: url("Mamdani.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
