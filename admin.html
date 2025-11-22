@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - The YUNity Project</title>
+    <link rel="stylesheet" href="enhanced-style.css">
+</head>
+<body>
+
+    <!-- Enhanced Header -->
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Admin Panel</p>
+        </div>
+    </div>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <div class="dropdown">
+                    <button class="dropbtn">Local ▾</button>
+                    <div class="dropdown-content">
+                        <li><a href="Local.html">Local News</a></li>
+                        <li><a href="Election.html">2025 Election</a></li>
+                    </div>
+                </div>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search articles..." aria-label="Search">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Content -->
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <p>Welcome to the YUNity Project Admin Panel</p>
+        </div>
+
+        <div class="admin-actions">
+            <div class="admin-card">
+                <h2>Create Article</h2>
+                <p>Create HTML code for new articles</p>
+                <button onclick="showSection('article')">Create Article</button>
+            </div>
+
+            <div class="admin-card">
+                <h2>Create Card</h2>
+                <p>Create article card code for homepage</p>
+                <button onclick="showSection('card')">Create Card</button>
+            </div>
+
+            <div class="admin-card">
+                <h2>Create Citations</h2>
+                <p>Generate formatted citations for articles</p>
+                <button onclick="showSection('citations')">Create Citations</button>
+            </div>
+        </div>
+
+        <!-- Article Generator Form -->
+        <div id="articleSection" class="form-section">
+            <h2>Generate Article HTML</h2>
+            <form id="articleForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleTitle">Article Title</label>
+                        <input type="text" id="articleTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCategory">Category</label>
+                        <select id="articleCategory" required>
+                            <option value="US Domestic">US Domestic</option>
+                            <option value="US Foreign Policy">US Foreign Policy</option>
+                            <option value="US Local">US Local</option>
+                            <option value="International">International</option>
+                            <option value="Opinion">Opinion</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleAuthor">Author</label>
+                        <input type="text" id="articleAuthor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleDate">Date</label>
+                        <input type="text" id="articleDate" placeholder="e.g., November 21, 2025" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="articleImage">Featured Image Filename</label>
+                    <input type="text" id="articleImage" placeholder="e.g., image.jpg" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="articleContent">Article Content (HTML)</label>
+                    <textarea id="articleContent" rows="10" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-generate">Generate HTML</button>
+                    <button type="button" class="btn-back" onclick="hideSection('article')">Back</button>
+                </div>
+            </form>
+
+            <div id="articleOutput" class="output-box">
+                <h3>Generated HTML Code</h3>
+                <pre><code id="articleCode"></code></pre>
+                <button class="btn-copy" onclick="copyCode('articleCode')">Copy Code</button>
+            </div>
+        </div>
+
+        <!-- Card Generator Form -->
+        <div id="cardSection" class="form-section">
+            <h2>Generate Article Card HTML</h2>
+            <form id="cardForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cardTitle">Article Title</label>
+                        <input type="text" id="cardTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardCategory">Category</label>
+                        <select id="cardCategory" required>
+                            <option value="US Domestic">US Domestic</option>
+                            <option value="US Foreign Policy">US Foreign Policy</option>
+                            <option value="US Local">US Local</option>
+                            <option value="International">International</option>
+                            <option value="Opinion">Opinion</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cardLink">Article Link</label>
+                        <input type="text" id="cardLink" placeholder="e.g., article.html" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardDate">Date</label>
+                        <input type="text" id="cardDate" placeholder="e.g., November 21, 2025" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cardImage">Image CSS Class</label>
+                        <input type="text" id="cardImage" placeholder="e.g., KirkImage" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardReadTime">Read Time</label>
+                        <input type="text" id="cardReadTime" placeholder="e.g., 6 min read" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cardExcerpt">Excerpt</label>
+                    <textarea id="cardExcerpt" rows="3" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-generate">Generate HTML</button>
+                    <button type="button" class="btn-back" onclick="hideSection('card')">Back</button>
+                </div>
+            </form>
+
+            <div id="cardOutput" class="output-box">
+                <h3>Generated HTML Code</h3>
+                <pre><code id="cardCode"></code></pre>
+                <button class="btn-copy" onclick="copyCode('cardCode')">Copy Code</button>
+            </div>
+        </div>
+
+        <!-- Citations Generator Form -->
+        <div id="citationsSection" class="form-section">
+            <h2>Generate Citations</h2>
+            <form id="citationsForm">
+                <div class="form-group">
+                    <label for="citationType">Citation Type</label>
+                    <select id="citationType">
+                        <option value="website">Website</option>
+                        <option value="article">News Article</option>
+                        <option value="book">Book</option>
+                        <option value="journal">Journal Article</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="citationAuthor">Author(s)</label>
+                    <input type="text" id="citationAuthor" placeholder="Last, First">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="citationTitle">Title</label>
+                        <input type="text" id="citationTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="citationSource">Source/Publisher</label>
+                        <input type="text" id="citationSource">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="citationDate">Date</label>
+                        <input type="text" id="citationDate" placeholder="Day Month Year">
+                    </div>
+                    <div class="form-group">
+                        <label for="citationURL">URL (optional)</label>
+                        <input type="text" id="citationURL" placeholder="https://...">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-generate">Generate Citation</button>
+                    <button type="button" class="btn-back" onclick="hideSection('citations')">Back</button>
+                </div>
+            </form>
+
+            <div id="citationsOutput" class="output-box">
+                <h3>Generated Citation</h3>
+                <pre><code id="citationsCode"></code></pre>
+                <button class="btn-copy" onclick="copyCode('citationsCode')">Copy Citation</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
+
+    <script src="enhanced-script.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="admin-functions.js"></script>
+</body>
+</html>

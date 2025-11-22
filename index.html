@@ -5,22 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="The YUNity Project - A youth-led organization dedicated to providing nonpartisan, fact-driven research and news to communities across America.">
-    <meta property="og:title" content="The YUNity Project">
-    <meta property="og:description" content="Nonpartisan, fact-driven research and news">
-    <meta property="og:type" content="website">
     <title>The YUNity Project - Nonpartisan News & Research</title>
     <link rel="stylesheet" href="enhanced-style.css">
 </head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2M32LXLLW"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-Z2M32LXLLW');
 </script>
 <body>
+
     <!-- Enhanced Header -->
     <div class="header-container">
         <div class="header-pattern"></div>
@@ -38,7 +34,6 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="domestic.html">US Domestic</a></li>
                 <li><a href="foreign.html">US Foreign Policy</a></li>
-                    <!-- Dropdown section -->
                 <div class="dropdown">
                     <button class="dropbtn">Local ▾</button>
                     <div class="dropdown-content">
@@ -50,26 +45,39 @@
                 <li><a href="Emergency.html">Emergency Statements</a></li>
                 <li><a href="oped.html">Opinion</a></li>
                 <li><a href="AboutUs.html">About Us</a></li>
+                <li id="adminPageLink" style="display:none;"><a href="admin.html">Admin</a></li>
+                <li><a href="#" id="adminLoginBtn">Admin Login</a></li>
             </ul>
             <div class="search-container">
                 <input type="text" class="search-box" placeholder="Search articles..." aria-label="Search">
             </div>
         </div>
     </nav>
-
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-content">
+            <span class="login-close">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p id="loginError" class="login-error"></p>
+        </div>
+    </div>
+    
     <!-- Main Content -->
     <div class="container">
-        <!-- Mission Statement -->
         <section class="mission">
             <h2>A youth-led organization dedicated to providing nonpartisan, fact-driven research and news to communities all across America</h2>
         </section>
 
-        <!-- Articles Section -->
         <section class="articles-section">
             <h2 class="section-title">Latest Articles</h2>
             
             <div class="articles-grid">
-                <!-- Article 1 -->
                 <article class="article-card">
                     <a href="NewYorkElection.html" class="card-link">
                         <div class="article-image Mamdani">
@@ -86,7 +94,7 @@
                         </div>
                     </a>
                 </article>
-                <!-- Article 2 -->
+
                 <article class="article-card">
                     <a href="NewJerseyElection.html" class="card-link">
                         <div class="article-image NewJerseyElectionImage">
@@ -103,7 +111,7 @@
                         </div>
                     </a>
                 </article>
-                <!-- Article 3 -->
+
                 <article class="article-card">
                     <a href="Article2.html" class="card-link">
                         <div class="article-image ShutdownImage">
@@ -121,7 +129,6 @@
                     </a>
                 </article>
 
-                <!-- Article 4 -->
                 <article class="article-card">
                     <a href="Article1.html" class="card-link">
                         <div class="article-image KirkImage">
@@ -140,14 +147,14 @@
                 </article>
             </div>
         </section>
-        <!--Welcome Statement-->
+
         <section class="welcome">
-            <p>“In a democracy, truth and education stand as pillars. When these pillars are threatened, our democracy is threatened. In a society where extremism has become mainstream, people must be able to realize that a difference in opinion is inevitable and must be well-managed. The founders of the United States framed our government with civil discourse at its core. The greatest and brightest moments in our nation’s history were those marked by compromise. A willingness to have an open mind is the essential ingredient in the great American experiment. The YUNity Project is more than just another organization; it’s a mission that anybody and everybody can join in this pursuit for truth. I hope that even in the darkest of times, we can realize the YUNity Project’s motto: veritas vos liberabit, the truth shall set you free.”</p>
+            <p>"In a democracy, truth and education stand as pillars. When these pillars are threatened, our democracy is threatened. In a society where extremism has become mainstream, people must be able to realize that a difference in opinion is inevitable and must be well-managed. The founders of the United States framed our government with civil discourse at its core. The greatest and brightest moments in our nation's history were those marked by compromise. A willingness to have an open mind is the essential ingredient in the great American experiment. The YUNity Project is more than just another organization; it's a mission that anybody and everybody can join in this pursuit for truth. I hope that even in the darkest of times, we can realize the YUNity Project's motto: veritas vos liberabit, the truth shall set you free."</p>
             <h3>H. Yun</h3>
             <h2>Hajoon "HJ" Yun</h2>
             <p>Founder, President, Chief Reporter</p>
         </section>
-        <!-- Newsletter Signup -->
+
         <section class="newsletter">
             <h3>Stay Informed</h3>
             <p>Subscribe to our newsletter for nonpartisan analysis and fact-driven reporting</p>
@@ -157,9 +164,10 @@
             </form>
         </section>
     </div>
-    <!-- Back to Top Button -->
+
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
     <script src="enhanced-script.js"></script>
+    <script src="admin-auth.js"></script>
 </body>
 </html>
