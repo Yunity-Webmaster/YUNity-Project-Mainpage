@@ -415,6 +415,10 @@ img {
     background-image: url("Mamdani.jpg");
 }
 
+.Thanksgiving {
+    background-image: url("Thanksgiving.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
