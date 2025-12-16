@@ -423,6 +423,10 @@ img {
     background-image: url("Epstein.jpeg");
 }
 
+.ChristianImage {
+    background-image: url("Stoning_of_stephen_icon.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
