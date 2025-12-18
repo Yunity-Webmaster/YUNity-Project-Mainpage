@@ -427,6 +427,10 @@ img {
     background-image: url("Stoning_of_stephen_icon.jpeg");
 }
 
+.TexasImage{
+    background-image: url("Greg_Abbott.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
