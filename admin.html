@@ -25,7 +25,7 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="domestic.html">US Domestic</a></li>
-                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="foreign.html">US Foreign News</a></li>
                 <div class="dropdown">
                     <button class="dropbtn">Local ▾</button>
                     <div class="dropdown-content">
@@ -85,7 +85,7 @@
                         <label for="articleCategory">Category</label>
                         <select id="articleCategory" required>
                             <option value="US Domestic">US Domestic</option>
-                            <option value="US Foreign Policy">US Foreign Policy</option>
+                            <option value="US Foreign News">US Foreign News</option>
                             <option value="US Local">US Local</option>
                             <option value="International">International</option>
                             <option value="Opinion">Opinion</option>
@@ -101,6 +101,17 @@
                     <div class="form-group">
                         <label for="articleDate">Date</label>
                         <input type="text" id="articleDate" placeholder="e.g., November 21, 2025" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleReadTime">Reading Time</label>
+                        <input type="text" id="articleReadTime" placeholder="e.g., 6 min read" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleCitationsPage">Citations Page Link</label>
+                        <input type="text" id="articleCitationsPage" placeholder="e.g., citations.html" required>
                     </div>
                 </div>
 
@@ -140,7 +151,7 @@
                         <label for="cardCategory">Category</label>
                         <select id="cardCategory" required>
                             <option value="US Domestic">US Domestic</option>
-                            <option value="US Foreign Policy">US Foreign Policy</option>
+                            <option value="US Foreign News">US Foreign News</option>
                             <option value="US Local">US Local</option>
                             <option value="International">International</option>
                             <option value="Opinion">Opinion</option>
@@ -190,55 +201,31 @@
 
         <!-- Citations Generator Form -->
         <div id="citationsSection" class="form-section">
-            <h2>Generate Citations</h2>
+            <h2>Generate Citations Page</h2>
             <form id="citationsForm">
                 <div class="form-group">
-                    <label for="citationType">Citation Type</label>
-                    <select id="citationType">
-                        <option value="website">Website</option>
-                        <option value="article">News Article</option>
-                        <option value="book">Book</option>
-                        <option value="journal">Journal Article</option>
-                    </select>
-                </div>
+                    <label for="citationsList">Paste All Citations (Plain Text)</label>
+                    <textarea id="citationsList" rows="15" placeholder="Paste your citations in plain text (one per line):
 
-                <div class="form-group">
-                    <label for="citationAuthor">Author(s)</label>
-                    <input type="text" id="citationAuthor" placeholder="Last, First">
-                </div>
+Example:
+Fischman, Noam. &quot;22% of Americans under 30 Say Killing Charlie Kirk Was Justified.&quot; CloudResearch, 16 Sept. 2025, https://www.cloudresearch.com/resources/blog/justifying-murder/. Accessed 27 Sept. 2025.
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="citationTitle">Title</label>
-                        <input type="text" id="citationTitle">
-                    </div>
-                    <div class="form-group">
-                        <label for="citationSource">Source/Publisher</label>
-                        <input type="text" id="citationSource">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="citationDate">Date</label>
-                        <input type="text" id="citationDate" placeholder="Day Month Year">
-                    </div>
-                    <div class="form-group">
-                        <label for="citationURL">URL (optional)</label>
-                        <input type="text" id="citationURL" placeholder="https://...">
-                    </div>
+The generator will automatically:
+- Italicize the source name (after the quoted title)
+- Convert URLs to clickable links
+- Format with proper indentation"></textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn-generate">Generate Citation</button>
+                    <button type="submit" class="btn-generate">Generate Citations HTML</button>
                     <button type="button" class="btn-back" onclick="hideSection('citations')">Back</button>
                 </div>
             </form>
 
             <div id="citationsOutput" class="output-box">
-                <h3>Generated Citation</h3>
-                <pre><code id="citationsCode"></code></pre>
-                <button class="btn-copy" onclick="copyCode('citationsCode')">Copy Citation</button>
+                <h3>Generated Citations Page HTML</h3>
+                <pre><code id="citationsCode" style="white-space: pre-wrap;"></code></pre>
+                <button class="btn-copy" onclick="copyCode('citationsCode')">Copy Code</button>
             </div>
         </div>
     </div>
@@ -248,5 +235,6 @@
     <script src="enhanced-script.js"></script>
     <script src="admin-auth.js"></script>
     <script src="admin-functions.js"></script>
+    <script src="practice.js"></script>
 </body>
 </html>

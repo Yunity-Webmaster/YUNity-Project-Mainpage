@@ -431,6 +431,18 @@ img {
     background-image: url("Greg_Abbott.jpg");
 }
 
+.PolarizationImage {
+    background-image: url("January6.png");
+}
+
+.VenezuelaImage {
+    background-image: url("Maduro.png");
+}
+
+.BushInstituteImage {
+    background-image: url("McKenzieWilliam.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
