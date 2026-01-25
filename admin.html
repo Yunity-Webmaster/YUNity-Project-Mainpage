@@ -121,6 +121,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="articleImageSource">Image Source/Credit</label>
+                    <input type="text" id="articleImageSource" placeholder="e.g., Demonstrators in No Kings Parade 17.jpg 14 June 2025 Author: Moonlightonasnowynight" required>
+                </div>
+
+                <div class="form-group">
                     <label for="articleContent">Article Content (HTML)</label>
                     <textarea id="articleContent" rows="10" required></textarea>
                 </div>
@@ -135,6 +140,7 @@
                 <h3>Generated HTML Code</h3>
                 <pre><code id="articleCode"></code></pre>
                 <button class="btn-copy" onclick="copyCode('articleCode')">Copy Code</button>
+                <button class="btn-copy" onclick="downloadArticle()" style="margin-left: 10px;">Download HTML</button>
             </div>
         </div>
 
@@ -203,6 +209,25 @@
         <div id="citationsSection" class="form-section">
             <h2>Generate Citations Page</h2>
             <form id="citationsForm">
+                <!-- Inside the citationsSection form, replace the existing fields with these -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="citationsArticleLink">Return to Article Link</label>
+                        <input type="text" id="citationsArticleLink" placeholder="e.g., nyc-election.html" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="citationsApprovalDate">Date of Approval</label>
+                        <input type="text" id="citationsApprovalDate" placeholder="e.g., 11/18/25" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="citationsApprovingBody">Approved By</label>
+                    <select id="citationsApprovingBody" required>
+                        <option value="IPC">IPC</option>
+                        <option value="Editorial Board">Editorial Board</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="citationsList">Paste All Citations (Plain Text)</label>
                     <textarea id="citationsList" rows="15" placeholder="Paste your citations in plain text (one per line):
@@ -226,6 +251,7 @@ The generator will automatically:
                 <h3>Generated Citations Page HTML</h3>
                 <pre><code id="citationsCode" style="white-space: pre-wrap;"></code></pre>
                 <button class="btn-copy" onclick="copyCode('citationsCode')">Copy Code</button>
+                <button class="btn-copy" onclick="downloadCitations()" style="margin-left: 10px;">Download HTML</button>
             </div>
         </div>
     </div>
