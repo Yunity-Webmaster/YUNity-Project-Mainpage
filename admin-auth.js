@@ -83,9 +83,12 @@ async function hashPassword(password, salt) {
 
 // Generate a random salt
 function generateSalt() {
+    console.log('generateSalt function called');
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    const salt = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    console.log('Generated salt:', salt);
+    return salt;
 }
 
 // Register a new user via Google Sheets
