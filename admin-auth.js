@@ -12,7 +12,6 @@ function isAppsScriptConfigured() {
         notPlaceholder2: APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
         result: result
     });
-    alert('Configuration check result: ' + result + '\nURL: ' + APPS_SCRIPT_URL); // Temporary alert for debugging
     return result;
 }
 
@@ -80,6 +79,13 @@ async function hashPassword(password, salt) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     return hashHex;
+}
+
+// Generate a random salt
+function generateSalt() {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 // Register a new user via Google Sheets
