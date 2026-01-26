@@ -110,7 +110,99 @@
 
     <script src="enhanced-script.js"></script>
     <script>
-        // Display saved articles on profile page
+        // Article metadata for saved articles display
+        const articlesData = {
+            'Trump.html': {
+                title: 'Joint Research Series (Part I) The Trump Administration: A Year in Review',
+                excerpt: 'How has Trump\'s second first year gone?',
+                date: 'January 20, 2026',
+                readTime: '8 min read',
+                category: 'US Domestic',
+                imageClass: 'TrumpImage'
+            },
+            'Venezuela.html': {
+                title: 'Venezuela Crisis: Maduro Captured',
+                excerpt: 'U.S. military action leads to the capture of Venezuelan President Nicolas Maduro.',
+                date: 'January 3, 2026',
+                readTime: '5 min read',
+                category: 'US Foreign News',
+                imageClass: 'VenezuelaImage'
+            },
+            'BushInstitute.html': {
+                title: 'YUNity Project Exclusive: Interview with the Bush Institute',
+                excerpt: 'An exclusive interview on political polarization and the role of journalism.',
+                date: 'December 18, 2025',
+                readTime: '5 min read',
+                category: 'US Domestic',
+                imageClass: 'BushInstituteImage'
+            },
+            'TexasPolitics.html': {
+                title: 'Texas\'s Political Scene: The Latest Details',
+                excerpt: 'Diving deep into the political climate of one of the most volatile states in the US— Texas.',
+                date: 'December 17, 2025',
+                readTime: '3 min read',
+                category: 'US Local',
+                imageClass: 'TexasImage'
+            },
+            'ChristianPersecution.html': {
+                title: 'Christian Persecution in Nigeria: Deliberate or Coincidental Harm?',
+                excerpt: 'Examining whether Christian Nigerians are being persecuted, or if it is non-religious violence.',
+                date: 'December 15, 2025',
+                readTime: '3 min read',
+                category: 'International',
+                imageClass: 'ChristianImage'
+            },
+            'Epstein.html': {
+                title: 'The Epstein Files: The Impact of the Declassified Archives',
+                excerpt: 'An in-depth analysis of the release of the controversial Epstein Files.',
+                date: 'November 26, 2025',
+                readTime: '3 min read',
+                category: 'International',
+                imageClass: 'Epstein'
+            },
+            'Article1.html': {
+                title: 'How Charlie Kirk\'s Assassination Reveals a Disturbing Trend in American Politics',
+                excerpt: 'Examining the rise of political violence and polarization in America following a tragic national event.',
+                date: 'September 28, 2025',
+                readTime: '6 min read',
+                category: 'US Domestic',
+                imageClass: 'KirkImage'
+            },
+            'Article2.html': {
+                title: 'The Federal Government Shutdown: How a Lack of Compromise Led to Where We Are Today',
+                excerpt: 'An in-depth analysis of the 2025 federal government shutdown, examining the political gridlock and its impact on American citizens.',
+                date: 'October 10, 2025',
+                readTime: '8 min read',
+                category: 'US Domestic',
+                imageClass: 'ShutdownImage'
+            },
+            'OpinionThanksgiving.html': {
+                title: 'OPINION: Why We SHOULD Talk Politics on Thanksgiving',
+                excerpt: 'Why should people not be afraid of bringing up politics at dinner?',
+                date: 'November 26, 2025',
+                readTime: '3 min read',
+                category: 'Opinion',
+                imageClass: 'Thanksgiving'
+            },
+            'NewYorkElection.html': {
+                title: 'New York City Mayoral Election 2025: Results & Analysis',
+                excerpt: 'An analysis of the 2025 New York City mayoral candidate; who won, and what do they stand for?',
+                date: 'November 21, 2025',
+                readTime: '6 min read',
+                category: 'US Local',
+                imageClass: 'Mamdani'
+            },
+            'NewJerseyElection.html': {
+                title: 'History Made: New Jersey\'s First Female Democratic Governor',
+                excerpt: 'A breakdown of the 2025 New Jersey governor election; who are the candidates, and what do they stand for?',
+                date: 'November 18, 2025',
+                readTime: '3 min read',
+                category: 'US Local',
+                imageClass: 'NewJerseyElectionImage'
+            }
+        };
+
+        // Display saved articles on profile page using article cards
         function displaySavedArticles() {
             const savedArticlesList = document.getElementById('savedArticlesList');
             const preferences = getUserPreferences();
@@ -122,17 +214,61 @@
             }
 
             const articlesHTML = savedArticles.map(articleUrl => {
-                // Extract article title from URL (remove .html and replace hyphens with spaces)
-                const title = articleUrl.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const articleData = articlesData[articleUrl];
+                if (!articleData) {
+                    // Fallback for articles not in the data object
+                    const title = articleUrl.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    return `
+                        <article class="article-card">
+                            <a href="${articleUrl}" class="card-link">
+                                <div class="article-image">
+                                    <span class="article-category">Article</span>
+                                </div>
+                                <div class="article-content">
+                                    <div class="article-meta">
+                                        <span>📅 Date Unknown</span>
+                                        <span>⏱️ Read time unknown</span>
+                                    </div>
+                                    <h3 class="article-title">${title}</h3>
+                                    <p class="article-excerpt">Click to read this article.</p>
+                                    <span class="read-more">Read More →</span>
+                                </div>
+                            </a>
+                            <div class="article-interactions">
+                                <button class="interaction-btn save active" onclick="unsaveArticle('${articleUrl}').then(() => displaySavedArticles())">
+                                    <i>💾</i> Unsave
+                                </button>
+                            </div>
+                        </article>
+                    `;
+                }
+
                 return `
-                    <div class="saved-article-item">
-                        <a href="${articleUrl}" class="saved-article-link">${title}</a>
-                        <button class="unsave-btn" onclick="unsaveArticle('${articleUrl}').then(() => displaySavedArticles())">Unsave</button>
-                    </div>
+                    <article class="article-card">
+                        <a href="${articleUrl}" class="card-link">
+                            <div class="article-image ${articleData.imageClass}">
+                                <span class="article-category">${articleData.category}</span>
+                            </div>
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span>📅 ${articleData.date}</span>
+                                    <span>⏱️ ${articleData.readTime}</span>
+                                </div>
+                                <h3 class="article-title">${articleData.title}</h3>
+                                <p class="article-excerpt">${articleData.excerpt}</p>
+                                <span class="read-more">Read More →</span>
+                            </div>
+                        </a>
+                        <div class="article-interactions">
+                            <button class="interaction-btn save active" onclick="unsaveArticle('${articleUrl}').then(() => displaySavedArticles())">
+                                <i>💾</i> Unsave
+                            </button>
+                        </div>
+                    </article>
                 `;
             }).join('');
 
-            savedArticlesList.innerHTML = articlesHTML;
+            savedArticlesList.innerHTML = `<div class="articles-grid">${articlesHTML}</div>`;
         }
 
         // Load saved articles when page loads
