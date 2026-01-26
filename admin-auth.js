@@ -173,29 +173,11 @@ async function saveArticle(articleUrl) {
     try {
         console.log('Attempting to save article:', articleUrl);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'saveArticle',
-                email: email,
-                articleUrl: articleUrl
-            })
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('saveArticle', {
+            email: email,
+            articleUrl: articleUrl
         });
-
-        console.log('Save article response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Save article result:', result);
 
         if (result.success) {
@@ -232,29 +214,11 @@ async function unsaveArticle(articleUrl) {
     try {
         console.log('Attempting to unsave article:', articleUrl);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'unsaveArticle',
-                email: email,
-                articleUrl: articleUrl
-            })
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('unsaveArticle', {
+            email: email,
+            articleUrl: articleUrl
         });
-
-        console.log('Unsave article response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Unsave article result:', result);
 
         if (result.success) {
@@ -289,29 +253,11 @@ async function likeArticle(articleUrl) {
     try {
         console.log('Attempting to like article:', articleUrl);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'likeArticle',
-                email: email,
-                articleUrl: articleUrl
-            })
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('likeArticle', {
+            email: email,
+            articleUrl: articleUrl
         });
-
-        console.log('Like article response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Like article result:', result);
 
         if (result.success) {
@@ -357,29 +303,11 @@ async function dislikeArticle(articleUrl) {
     try {
         console.log('Attempting to dislike article:', articleUrl);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'dislikeArticle',
-                email: email,
-                articleUrl: articleUrl
-            })
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('dislikeArticle', {
+            email: email,
+            articleUrl: articleUrl
         });
-
-        console.log('Dislike article response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Dislike article result:', result);
 
         if (result.success) {
@@ -425,29 +353,11 @@ async function removeRating(articleUrl) {
     try {
         console.log('Attempting to remove rating from article:', articleUrl);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'removeRating',
-                email: email,
-                articleUrl: articleUrl
-            })
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('removeRating', {
+            email: email,
+            articleUrl: articleUrl
         });
-
-        console.log('Remove rating response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Remove rating result:', result);
 
         if (result.success) {
