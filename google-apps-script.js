@@ -402,10 +402,10 @@ function doGet(e) {
       }
 
     } else if (action === 'getAllUsers') {
-      result = getAllUsers(data.email);
+      result = getAllUsers(e.parameter.email);
 
     } else if (action === 'changeUserRole') {
-      result = changeUserRole(data.email, data.targetEmail, data.role);
+      result = changeUserRole(e.parameter.email, e.parameter.targetEmail, e.parameter.role);
 
     } else {
       result = {success: false, message: 'Invalid action'};
@@ -418,11 +418,10 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
 
   } catch (error) {
-    Logger.log('doPost error: ' + error.toString());
+    Logger.log('doGet error: ' + error.toString());
     Logger.log('Error stack: ' + error.stack);
     const errorResult = {success: false, message: 'Server error'};
     const jsonResponse = JSON.stringify(errorResult);
-    const callback = e.parameter.callback;
 
     return ContentService
       .createTextOutput(`${callback}(${jsonResponse})`)
@@ -432,16 +431,25 @@ function doGet(e) {
 
 // Helper function to get all users (for admin use only)
 function getAllUsers(requestingEmail) {
+  Logger.log('getAllUsers called with email: ' + requestingEmail);
   const sheet = SpreadsheetApp.getActiveSheet();
   const values = sheet.getDataRange().getValues();
+  Logger.log('Sheet has ' + values.length + ' rows');
+
   const requestingUser = values.find(row => row[0] === requestingEmail);
+  Logger.log('Requesting user found: ' + !!requestingUser);
+
+  if (requestingUser) {
+    Logger.log('Requesting user role: ' + requestingUser[3]);
+  }
 
   if (!requestingUser || requestingUser[3] !== 'admin') {
+    Logger.log('Unauthorized access attempt');
     return {success: false, message: 'Unauthorized'};
   }
 
   // Return all users (excluding sensitive data like passwords)
-  const users = values.slice(1).map(row => ({
+  const users = values.map(row => ({
     email: row[0],
     role: row[3] || 'user',
     savedArticles: row[4] || '',
@@ -449,29 +457,37 @@ function getAllUsers(requestingEmail) {
     dislikedArticles: row[6] || ''
   }));
 
+  Logger.log('Returning ' + users.length + ' users');
   return {success: true, users: users};
 }
 
 // Helper function to change user role (admin only)
 function changeUserRole(requestingEmail, targetEmail, newRole) {
+  Logger.log('changeUserRole called: ' + requestingEmail + ' -> ' + targetEmail + ' role: ' + newRole);
   const sheet = SpreadsheetApp.getActiveSheet();
   const values = sheet.getDataRange().getValues();
   const requestingUser = values.find(row => row[0] === requestingEmail);
   const targetUserIndex = values.findIndex(row => row[0] === targetEmail);
 
+  Logger.log('Requesting user found: ' + !!requestingUser + ', Target user index: ' + targetUserIndex);
+
   if (!requestingUser || requestingUser[3] !== 'admin') {
+    Logger.log('Unauthorized access attempt');
     return {success: false, message: 'Unauthorized'};
   }
 
   if (targetUserIndex === -1) {
+    Logger.log('Target user not found');
     return {success: false, message: 'User not found'};
   }
 
   if (!['user', 'admin'].includes(newRole)) {
+    Logger.log('Invalid role: ' + newRole);
     return {success: false, message: 'Invalid role'};
   }
 
   // Update the user's role
   sheet.getRange(targetUserIndex + 1, 4).setValue(newRole);
+  Logger.log('Role updated successfully');
   return {success: true};
 }
