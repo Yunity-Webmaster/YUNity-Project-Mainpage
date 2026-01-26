@@ -1,6 +1,11 @@
 // Admin Authentication System with Google Sheets Integration
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyM46NaqhqCsofKa9bCl5_MmftsmSyGrM11CZoWpoGxcBDkbFMaqTkhNNu-KhtYZTp/exec'; // Replace with your deployed web app URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB43p72tAWcYhpy4L6k3YggWJN3kv6fc6QAWhaIF8AYNGGeqv8YJj8732h4AlhAdLp/exec'; // Replace with your deployed web app URL
+
+// Check if Apps Script URL is configured
+function isAppsScriptConfigured() {
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+}
 
 // Generate a random salt for password hashing
 function generateSalt() {
@@ -19,14 +24,26 @@ async function hashPassword(password, salt) {
 
 // Register a new user via Google Sheets
 async function registerUser(email, password, role = 'user') {
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
         const salt = generateSalt();
         const hash = await hashPassword(password, salt);
 
+        console.log('Attempting to register user:', email);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors', // Explicitly set CORS mode
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'register',
@@ -37,20 +54,53 @@ async function registerUser(email, password, role = 'user') {
             })
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Registration result:', result);
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Registration error:', error);
+
+        // Provide more specific error messages
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            return {
+                success: false,
+                message: `Network error: Unable to connect to server. This may be due to:\n• Mixed content blocking (HTTP to HTTPS)\n• Network connectivity issues\n• CORS policy restrictions\n• Server not responding\n\nTry accessing the site over HTTPS or check your internet connection.`
+            };
+        }
+
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
 // Login user via Google Sheets
 async function loginUser(email, password) {
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to login user:', email);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors', // Explicitly set CORS mode
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'login',
@@ -59,7 +109,15 @@ async function loginUser(email, password) {
             })
         });
 
+        console.log('Login response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Login result:', result);
+
         if (result.success) {
             // Store user preferences in sessionStorage
             sessionStorage.setItem('user_saved_articles', result.savedArticles || '');
@@ -68,7 +126,20 @@ async function loginUser(email, password) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Login error:', error);
+
+        // Provide more specific error messages
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            return {
+                success: false,
+                message: `Network error: Unable to connect to server. This may be due to:\n• Mixed content blocking (HTTP to HTTPS)\n• Network connectivity issues\n• CORS policy restrictions\n• Server not responding\n\nTry accessing the site over HTTPS or check your internet connection.`
+            };
+        }
+
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
@@ -77,11 +148,23 @@ async function saveArticle(articleUrl) {
     const email = sessionStorage.getItem('user_email');
     if (!email) return { success: false, message: 'Not logged in' };
 
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to save article:', articleUrl);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'saveArticle',
@@ -90,7 +173,15 @@ async function saveArticle(articleUrl) {
             })
         });
 
+        console.log('Save article response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Save article result:', result);
+
         if (result.success) {
             // Update local session storage
             const saved = sessionStorage.getItem('user_saved_articles') || '';
@@ -102,7 +193,11 @@ async function saveArticle(articleUrl) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Save article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
@@ -111,11 +206,23 @@ async function unsaveArticle(articleUrl) {
     const email = sessionStorage.getItem('user_email');
     if (!email) return { success: false, message: 'Not logged in' };
 
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to unsave article:', articleUrl);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'unsaveArticle',
@@ -124,7 +231,15 @@ async function unsaveArticle(articleUrl) {
             })
         });
 
+        console.log('Unsave article response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Unsave article result:', result);
+
         if (result.success) {
             // Update local session storage
             const saved = sessionStorage.getItem('user_saved_articles') || '';
@@ -134,7 +249,11 @@ async function unsaveArticle(articleUrl) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Unsave article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
@@ -143,11 +262,23 @@ async function likeArticle(articleUrl) {
     const email = sessionStorage.getItem('user_email');
     if (!email) return { success: false, message: 'Not logged in' };
 
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to like article:', articleUrl);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'likeArticle',
@@ -156,7 +287,15 @@ async function likeArticle(articleUrl) {
             })
         });
 
+        console.log('Like article response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Like article result:', result);
+
         if (result.success) {
             // Update local session storage
             const liked = sessionStorage.getItem('user_liked_articles') || '';
@@ -177,7 +316,11 @@ async function likeArticle(articleUrl) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Like article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
@@ -186,11 +329,23 @@ async function dislikeArticle(articleUrl) {
     const email = sessionStorage.getItem('user_email');
     if (!email) return { success: false, message: 'Not logged in' };
 
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to dislike article:', articleUrl);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'dislikeArticle',
@@ -199,7 +354,15 @@ async function dislikeArticle(articleUrl) {
             })
         });
 
+        console.log('Dislike article response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Dislike article result:', result);
+
         if (result.success) {
             // Update local session storage
             const liked = sessionStorage.getItem('user_liked_articles') || '';
@@ -220,7 +383,11 @@ async function dislikeArticle(articleUrl) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Dislike article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
@@ -229,11 +396,23 @@ async function removeRating(articleUrl) {
     const email = sessionStorage.getItem('user_email');
     if (!email) return { success: false, message: 'Not logged in' };
 
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
     try {
+        console.log('Attempting to remove rating from article:', articleUrl);
+
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache', // Prevent caching issues
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 action: 'removeRating',
@@ -242,7 +421,15 @@ async function removeRating(articleUrl) {
             })
         });
 
+        console.log('Remove rating response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
+        console.log('Remove rating result:', result);
+
         if (result.success) {
             // Update local session storage
             const liked = sessionStorage.getItem('user_liked_articles') || '';
@@ -260,7 +447,11 @@ async function removeRating(articleUrl) {
         }
         return result;
     } catch (error) {
-        return { success: false, message: 'Network error' };
+        console.error('Remove rating error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
     }
 }
 
