@@ -83,12 +83,9 @@ async function hashPassword(password, salt) {
 
 // Generate a random salt
 function generateSalt() {
-    console.log('generateSalt function called');
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    const salt = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-    console.log('Generated salt:', salt);
-    return salt;
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 // Register a new user via Google Sheets
@@ -106,52 +103,22 @@ async function registerUser(email, password, role = 'user') {
 
         console.log('Attempting to register user:', email);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'register',
-                email: email,
-                salt: salt,
-                hash: hash,
-                role: role
-            })
+        // Use JSONP directly to avoid CORS issues
+        console.log('Using JSONP for registration');
+        const result = await jsonpRequest('register', {
+            email: email,
+            salt: salt,
+            hash: hash,
+            role: role
         });
-
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Registration result:', result);
         return result;
-    } catch (fetchError) {
-        console.log('Fetch failed, trying JSONP fallback:', fetchError.message);
-
-        // Fallback to JSONP
-        try {
-            const salt = generateSalt();
-            const hash = await hashPassword(password, salt);
-
-            return await jsonpRequest('register', {
-                email: email,
-                salt: salt,
-                hash: hash,
-                role: role
-            });
-        } catch (jsonpError) {
-            console.error('JSONP fallback also failed:', jsonpError.message);
-            throw fetchError; // Re-throw original error
-        }
+    } catch (error) {
+        console.error('Registration failed:', error.message);
+        return {
+            success: false,
+            message: 'Registration failed. Please try again.'
+        };
     }
 }
 
@@ -167,29 +134,12 @@ async function loginUser(email, password) {
     try {
         console.log('Attempting to login user:', email);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'omit',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
-            },
-            body: JSON.stringify({
-                action: 'login',
-                email: email,
-                password: password
-            })
+        // Use JSONP directly to avoid CORS issues
+        console.log('Using JSONP for login');
+        const result = await jsonpRequest('login', {
+            email: email,
+            password: password
         });
-
-        console.log('Login response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         console.log('Login result:', result);
 
         if (result.success) {
@@ -199,19 +149,12 @@ async function loginUser(email, password) {
             sessionStorage.setItem('user_disliked_articles', result.dislikedArticles || '');
         }
         return result;
-    } catch (fetchError) {
-        console.log('Fetch failed, trying JSONP fallback:', fetchError.message);
-
-        // Fallback to JSONP
-        try {
-            return await jsonpRequest('login', {
-                email: email,
-                password: password
-            });
-        } catch (jsonpError) {
-            console.error('JSONP fallback also failed:', jsonpError.message);
-            throw fetchError; // Re-throw original error
-        }
+    } catch (error) {
+        console.error('Login failed:', error.message);
+        return {
+            success: false,
+            message: 'Login failed. Please try again.'
+        };
     }
 }
 
