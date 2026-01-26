@@ -1,6 +1,6 @@
 // Admin Authentication System with Google Sheets Integration
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgBakYXJnzY8xn8B31UjuI-pBKfg5IvuGnoQYqyC0YYMvAVn__bEBEgzFLdBJwDAmz/exec'; // Replace with your deployed web app URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLRy6gYsWtohodTw94pFRA51mR13zcMepti1lmME-ZeufwnUj7iwkRXx6_e-96Lqkq/exec'; // Replace with your deployed web app URL
 
 // Check if Apps Script URL is configured
 function isAppsScriptConfigured() {
@@ -749,5 +749,4 @@ if (window.location.pathname.includes('profile.html')) {
 }
 
 // Update UI on page load
-
 updateLoginUI();

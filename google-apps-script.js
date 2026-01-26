@@ -1,8 +1,7 @@
 // Hash password with salt using SHA-256
 function hashPassword(password, salt) {
   const data = password + salt;
-  // Google Apps Script handles UTF-8 encoding automatically for strings
-  const hashBuffer = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data, Utilities.Charset.UTF_8);
+  const hashBuffer = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data);
   const hashArray = hashBuffer.map(function(byte) {
     return ('0' + (byte & 0xFF).toString(16)).slice(-2);
   });
@@ -196,6 +195,8 @@ function doPost(e) {
     }
 
   } catch (error) {
+    Logger.log('doPost error: ' + error.toString());
+    Logger.log('Error stack: ' + error.stack);
     const errorResult = {success: false, message: 'Server error'};
     const jsonResponse = JSON.stringify(errorResult);
     const callback = e.parameter ? e.parameter.callback : null;
@@ -214,9 +215,13 @@ function doPost(e) {
 
 function doGet(e) {
   try {
+    Logger.log('doGet called with parameters: ' + JSON.stringify(e.parameter));
     const action = e.parameter.action;
     const callback = e.parameter.callback;
+    Logger.log('Action: ' + action + ', Callback: ' + callback);
+
     const sheet = SpreadsheetApp.getActiveSheet();
+    Logger.log('Sheet name: ' + sheet.getName());
 
     let result;
 
@@ -239,29 +244,38 @@ function doGet(e) {
       }
 
     } else if (action === 'login') {
+      Logger.log('Login attempt for: ' + e.parameter.email);
       const email = e.parameter.email;
       const password = e.parameter.password;
 
       const values = sheet.getDataRange().getValues();
+      Logger.log('Sheet has ' + values.length + ' rows');
+
       const userRow = values.find(row => row[0] === email);
 
       if (!userRow) {
+        Logger.log('User not found: ' + email);
         result = {success: false, message: 'Invalid credentials'};
       } else {
+        Logger.log('User found, checking password');
         const salt = userRow[1];
         const storedHash = userRow[2];
-        const role = userRow[3] || 'user';
+        Logger.log('Salt: ' + salt + ', Stored hash length: ' + storedHash.length);
+
         const computedHash = hashPassword(password, salt);
+        Logger.log('Computed hash length: ' + computedHash.length);
 
         if (computedHash === storedHash) {
+          Logger.log('Password match successful');
           result = {
             success: true,
-            role: role,
+            role: userRow[3] || 'user',
             savedArticles: userRow[4] || '',
             likedArticles: userRow[5] || '',
             dislikedArticles: userRow[6] || ''
           };
         } else {
+          Logger.log('Password mismatch');
           result = {success: false, message: 'Invalid credentials'};
         }
       }
@@ -392,6 +406,8 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
 
   } catch (error) {
+    Logger.log('doPost error: ' + error.toString());
+    Logger.log('Error stack: ' + error.stack);
     const errorResult = {success: false, message: 'Server error'};
     const jsonResponse = JSON.stringify(errorResult);
     const callback = e.parameter.callback;
