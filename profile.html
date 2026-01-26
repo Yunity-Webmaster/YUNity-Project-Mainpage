@@ -8,17 +8,32 @@
     <script src="admin-auth.js" defer></script>
 </head>
 <body>
-    <nav class="navbar">
+
+    <!-- Enhanced Header -->
+    <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
+    </div>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <h1>Yung Politics</h1>
-            </div>
-            <ul class="nav-menu">
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="domestic.html">Domestic</a></li>
-                <li><a href="foreign.html">Foreign</a></li>
-                <li><a href="Local.html">Local News</a></li>
-                <li><a href="Election.html">2025 Election</a></li>
+                <li><a href="domestic.html">US Domestic</a></li>
+                <li><a href="foreign.html">US Foreign News</a></li>
+                    <!-- Dropdown section -->
+                <div class="dropdown">
+                    <button class="dropbtn">Local ▾</button>
+                    <div class="dropdown-content">
+                        <li><a href="Local.html">Local News</a></li>
+                        <li><a href="Election.html">2025 Election</a></li>
+                    </div>
+                </div>
                 <li><a href="international.html">International</a></li>
                 <li><a href="Emergency.html">Emergency Statements</a></li>
                 <li><a href="oped.html">Opinion</a></li>
