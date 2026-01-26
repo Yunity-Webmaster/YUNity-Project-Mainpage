@@ -1,15 +1,66 @@
 // Admin Authentication System with Google Sheets Integration
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB43p72tAWcYhpy4L6k3YggWJN3kv6fc6QAWhaIF8AYNGGeqv8YJj8732h4AlhAdLp/exec'; // Replace with your deployed web app URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0KkuLTonshOreyeSW8EexXzryNHT3JzLtsEg4jwjDV5R01KAc06WJ1/exec'; // Replace with your deployed web app URL
 
 // Check if Apps Script URL is configured
 function isAppsScriptConfigured() {
-    return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0KkuLTonshOreyeSW8EexXzryNHT3JzLtsEg4jwjDV5R01KAc06WJ1/exec' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0KkuLTonshOreyeSW8EexXzryNHT3JzLtsEg4jwjDV5R01KAc06WJ1/exec';
 }
 
-// Generate a random salt for password hashing
-function generateSalt() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+// JSONP fallback for when fetch fails due to CSP restrictions
+function jsonpRequest(action, data) {
+    return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_callback_' + Math.random().toString(36).substr(2, 9);
+
+        // Create the URL with query parameters
+        const params = new URLSearchParams();
+        params.append('action', action);
+        params.append('callback', callbackName);
+
+        // Add data parameters
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
+
+        const url = `${APPS_SCRIPT_URL}?${params.toString()}`;
+
+        // Create script element
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+
+        // Set up callback function
+        window[callbackName] = function(response) {
+            // Clean up
+            delete window[callbackName];
+            document.head.removeChild(script);
+
+            resolve(response);
+        };
+
+        // Handle errors
+        script.onerror = function() {
+            delete window[callbackName];
+            if (document.head.contains(script)) {
+                document.head.removeChild(script);
+            }
+            reject(new Error('JSONP request failed'));
+        };
+
+        // Add timeout
+        setTimeout(() => {
+            if (window[callbackName]) {
+                delete window[callbackName];
+                if (document.head.contains(script)) {
+                    document.head.removeChild(script);
+                }
+                reject(new Error('JSONP request timeout'));
+            }
+        }, 10000); // 10 second timeout
+
+        // Add script to document
+        document.head.appendChild(script);
+    });
 }
 
 // Hash password with salt using SHA-256
@@ -39,11 +90,12 @@ async function registerUser(email, password, role = 'user') {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors', // Explicitly set CORS mode
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'register',
@@ -64,21 +116,24 @@ async function registerUser(email, password, role = 'user') {
         const result = await response.json();
         console.log('Registration result:', result);
         return result;
-    } catch (error) {
-        console.error('Registration error:', error);
+    } catch (fetchError) {
+        console.log('Fetch failed, trying JSONP fallback:', fetchError.message);
 
-        // Provide more specific error messages
-        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-            return {
-                success: false,
-                message: `Network error: Unable to connect to server. This may be due to:\n• Mixed content blocking (HTTP to HTTPS)\n• Network connectivity issues\n• CORS policy restrictions\n• Server not responding\n\nTry accessing the site over HTTPS or check your internet connection.`
-            };
+        // Fallback to JSONP
+        try {
+            const salt = generateSalt();
+            const hash = await hashPassword(password, salt);
+
+            return await jsonpRequest('register', {
+                email: email,
+                salt: salt,
+                hash: hash,
+                role: role
+            });
+        } catch (jsonpError) {
+            console.error('JSONP fallback also failed:', jsonpError.message);
+            throw fetchError; // Re-throw original error
         }
-
-        return {
-            success: false,
-            message: `Network error: ${error.message}. Please check your internet connection and try again.`
-        };
     }
 }
 
@@ -96,11 +151,12 @@ async function loginUser(email, password) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors', // Explicitly set CORS mode
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'login',
@@ -125,21 +181,19 @@ async function loginUser(email, password) {
             sessionStorage.setItem('user_disliked_articles', result.dislikedArticles || '');
         }
         return result;
-    } catch (error) {
-        console.error('Login error:', error);
+    } catch (fetchError) {
+        console.log('Fetch failed, trying JSONP fallback:', fetchError.message);
 
-        // Provide more specific error messages
-        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-            return {
-                success: false,
-                message: `Network error: Unable to connect to server. This may be due to:\n• Mixed content blocking (HTTP to HTTPS)\n• Network connectivity issues\n• CORS policy restrictions\n• Server not responding\n\nTry accessing the site over HTTPS or check your internet connection.`
-            };
+        // Fallback to JSONP
+        try {
+            return await jsonpRequest('login', {
+                email: email,
+                password: password
+            });
+        } catch (jsonpError) {
+            console.error('JSONP fallback also failed:', jsonpError.message);
+            throw fetchError; // Re-throw original error
         }
-
-        return {
-            success: false,
-            message: `Network error: ${error.message}. Please check your internet connection and try again.`
-        };
     }
 }
 
@@ -160,11 +214,12 @@ async function saveArticle(articleUrl) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'saveArticle',
@@ -218,11 +273,12 @@ async function unsaveArticle(articleUrl) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'unsaveArticle',
@@ -274,11 +330,12 @@ async function likeArticle(articleUrl) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'likeArticle',
@@ -341,11 +398,12 @@ async function dislikeArticle(articleUrl) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'dislikeArticle',
@@ -408,11 +466,12 @@ async function removeRating(articleUrl) {
 
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache', // Prevent caching issues
+            cache: 'no-cache',
+            credentials: 'omit',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; YungPolitics/1.0)',
             },
             body: JSON.stringify({
                 action: 'removeRating',

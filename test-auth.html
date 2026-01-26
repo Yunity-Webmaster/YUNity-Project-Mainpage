@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+        .result { margin-top: 10px; padding: 10px; background: #f0f0f0; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Registration Test</h1>
+
+    <div class="test-section">
+        <h2>Test Configuration Check</h2>
+        <button onclick="testConfig()">Test Apps Script Configuration</button>
+        <div id="configResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Registration</h2>
+        <input type="email" id="testEmail" placeholder="Email" value="test@example.com">
+        <input type="password" id="testPassword" placeholder="Password" value="testpass123">
+        <button onclick="testRegistration()">Test Registration</button>
+        <div id="registerResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" value="test@example.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="testpass123">
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginResult" class="result"></div>
+    </div>
+
+    <script src="admin-auth.js"></script>
+    <script>
+        async function testConfig() {
+            const result = document.getElementById('configResult');
+            const isConfigured = isAppsScriptConfigured();
+            result.textContent = `Apps Script Configured: ${isConfigured}\nURL: ${APPS_SCRIPT_URL}`;
+        }
+
+        async function testRegistration() {
+            const result = document.getElementById('registerResult');
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            result.textContent = 'Testing registration...';
+            try {
+                const response = await registerUser(email, password);
+                result.textContent = `Registration Result:\n${JSON.stringify(response, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Registration Error:\n${error.message}`;
+            }
+        }
+
+        async function testLogin() {
+            const result = document.getElementById('loginResult');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            result.textContent = 'Testing login...';
+            try {
+                const response = await loginUser(email, password);
+                result.textContent = `Login Result:\n${JSON.stringify(response, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Login Error:\n${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

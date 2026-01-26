@@ -90,8 +90,21 @@
             <p>The past year was marked by many different controversies, conflicts, and political discourse. The actions of the Trump administration have fueled the exponential rise of polarization in the United States. As President Trump begins his second year in office, the YUNity Project stands resolute in reaffirming the importance of compromise and a cooling of polarization in our political climate. Through productive dialogue and civil discourse, elected officials can set an example for the next generation of leaders and leave a nation that seeks to unite, not divide.</p>
         </div>
 
+        <!-- Article Interaction Buttons -->
+        <div class="article-interactions">
+            <button class="interaction-btn save" id="saveBtn" onclick="toggleSave()">
+                <i>💾</i> Save Article
+            </button>
+            <button class="interaction-btn like" id="likeBtn" onclick="toggleLike()">
+                <i>👍</i> Like
+            </button>
+            <button class="interaction-btn dislike" id="dislikeBtn" onclick="toggleDislike()">
+                <i>👎</i> Dislike
+            </button>
+        </div>
+
         <!-- Social Share Buttons -->
-        <div class="share-container">
+        <div class="social-share">
             <a href="#" class="share-btn">🐦 Twitter</a>
             <a href="#" class="share-btn">📸 Instagram</a>
             <a href="#" class="share-btn">🔗 Copy Link</a>
@@ -105,5 +118,143 @@
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
     <script src="enhanced-script.js"></script>
+    <script>
+        // Article interaction functions
+        const currentArticleUrl = 'Trump.html'; // Current article filename
+
+        // Initialize button states based on user preferences
+        function initializeArticleButtons() {
+            if (!checkAuth().loggedIn) {
+                // Hide interaction buttons for non-logged-in users
+                document.querySelector('.article-interactions').style.display = 'none';
+                return;
+            }
+
+            const preferences = getUserPreferences();
+
+            // Update save button
+            const saveBtn = document.getElementById('saveBtn');
+            if (preferences.savedArticles.includes(currentArticleUrl)) {
+                saveBtn.classList.add('active');
+                saveBtn.innerHTML = '<i>💾</i> Saved';
+            }
+
+            // Update like/dislike buttons
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+
+            if (preferences.likedArticles.includes(currentArticleUrl)) {
+                likeBtn.classList.add('active');
+                dislikeBtn.classList.remove('active');
+            } else if (preferences.dislikedArticles.includes(currentArticleUrl)) {
+                dislikeBtn.classList.add('active');
+                likeBtn.classList.remove('active');
+            }
+        }
+
+        // Toggle save/unsave article
+        async function toggleSave() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to save articles.');
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            const preferences = getUserPreferences();
+            const isSaved = preferences.savedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isSaved) {
+                    result = await unsaveArticle(currentArticleUrl);
+                    if (result.success) {
+                        saveBtn.classList.remove('active');
+                        saveBtn.innerHTML = '<i>💾</i> Save Article';
+                        showNotification('Article removed from saved articles!');
+                    }
+                } else {
+                    result = await saveArticle(currentArticleUrl);
+                    if (result.success) {
+                        saveBtn.classList.add('active');
+                        saveBtn.innerHTML = '<i>💾</i> Saved';
+                        showNotification('Article saved to your profile!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating article. Please try again.');
+            }
+        }
+
+        // Toggle like article
+        async function toggleLike() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to like articles.');
+                return;
+            }
+
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+            const preferences = getUserPreferences();
+            const isLiked = preferences.likedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isLiked) {
+                    result = await removeRating(currentArticleUrl);
+                    if (result.success) {
+                        likeBtn.classList.remove('active');
+                        showNotification('Like removed!');
+                    }
+                } else {
+                    result = await likeArticle(currentArticleUrl);
+                    if (result.success) {
+                        likeBtn.classList.add('active');
+                        dislikeBtn.classList.remove('active');
+                        showNotification('Article liked!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating rating. Please try again.');
+            }
+        }
+
+        // Toggle dislike article
+        async function toggleDislike() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to dislike articles.');
+                return;
+            }
+
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+            const preferences = getUserPreferences();
+            const isDisliked = preferences.dislikedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isDisliked) {
+                    result = await removeRating(currentArticleUrl);
+                    if (result.success) {
+                        dislikeBtn.classList.remove('active');
+                        showNotification('Dislike removed!');
+                    }
+                } else {
+                    result = await dislikeArticle(currentArticleUrl);
+                    if (result.success) {
+                        dislikeBtn.classList.add('active');
+                        likeBtn.classList.remove('active');
+                        showNotification('Article disliked!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating rating. Please try again.');
+            }
+        }
+
+        // Initialize buttons when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeArticleButtons();
+        });
+    </script>
 </body>
 </html>
