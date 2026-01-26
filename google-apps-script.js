@@ -1,3 +1,14 @@
+// Hash password with salt using SHA-256
+function hashPassword(password, salt) {
+  const data = password + salt;
+  // Google Apps Script handles UTF-8 encoding automatically for strings
+  const hashBuffer = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data, Utilities.Charset.UTF_8);
+  const hashArray = hashBuffer.map(function(byte) {
+    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+  });
+  return hashArray.join('');
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
