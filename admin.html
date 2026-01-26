@@ -70,6 +70,12 @@
                 <p>Generate formatted citations for articles</p>
                 <button onclick="showSection('citations')">Create Citations</button>
             </div>
+
+            <div class="admin-card">
+                <h2>User Management</h2>
+                <p>Manage user accounts and permissions</p>
+                <button onclick="showSection('users')">Manage Users</button>
+            </div>
         </div>
 
         <!-- Article Generator Form -->
@@ -252,6 +258,20 @@ The generator will automatically:
                 <pre><code id="citationsCode" style="white-space: pre-wrap;"></code></pre>
                 <button class="btn-copy" onclick="copyCode('citationsCode')">Copy Code</button>
                 <button class="btn-copy" onclick="downloadCitations()" style="margin-left: 10px;">Download HTML</button>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div id="usersSection" class="form-section">
+            <h2>User Management</h2>
+            <div class="user-management">
+                <div class="user-list-section">
+                    <h3>All Users</h3>
+                    <div id="userList" class="user-list">
+                        <p>Loading users...</p>
+                    </div>
+                    <button onclick="loadUsers()" class="btn-refresh">Refresh User List</button>
+                </div>
             </div>
         </div>
     </div>

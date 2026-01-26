@@ -1573,6 +1573,114 @@ body.works-cited-page {
     border-color: #4ade80;
 }
 
+/* User Management Styles */
+.user-management {
+    margin-top: 30px;
+}
+
+.user-list-section {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(203,162,48,0.3);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.user-list-section h3 {
+    color: #cba230;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.user-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(203,162,48,0.2);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.user-item.admin {
+    background: rgba(203,162,48,0.1);
+    border-color: rgba(203,162,48,0.4);
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-email {
+    color: #cba230;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.user-role {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-promote, .btn-demote {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-promote {
+    background: #4ade80;
+    color: #17344e;
+}
+
+.btn-promote:hover {
+    background: #22c55e;
+    transform: translateY(-1px);
+}
+
+.btn-demote {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-demote:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.btn-refresh {
+    padding: 12px 24px;
+    background: rgba(203,162,48,0.8);
+    color: #17344e;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh:hover {
+    background: #cba230;
+    transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
@@ -1584,6 +1692,17 @@ body.works-cited-page {
     
     .admin-actions {
         grid-template-columns: 1fr;
+    }
+    
+    .user-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .user-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
 }
 /* =====================================

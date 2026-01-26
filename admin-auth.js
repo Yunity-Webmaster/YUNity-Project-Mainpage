@@ -660,3 +660,127 @@ if (window.location.pathname.includes('profile.html')) {
 
 // Update UI on page load
 updateLoginUI();
+
+// User Management Functions
+async function loadUsers() {
+    const userList = document.getElementById('userList');
+    if (!userList) return;
+
+    userList.innerHTML = '<p>Loading users...</p>';
+
+    try {
+        const response = await jsonpRequest('getAllUsers', { 
+            email: sessionStorage.getItem('user_email') // requesting admin email
+        });
+        if (response.success) {
+            displayUsers(response.users);
+        } else {
+            userList.innerHTML = '<p>Error loading users. Please try again.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+        userList.innerHTML = '<p>Error loading users. Please try again.</p>';
+    }
+}
+
+function displayUsers(users) {
+    const userList = document.getElementById('userList');
+    if (!userList) return;
+
+    if (!users || users.length === 0) {
+        userList.innerHTML = '<p>No users found.</p>';
+        return;
+    }
+
+    userList.innerHTML = users.map(user => `
+        <div class="user-item ${user.role === 'admin' ? 'admin' : ''}">
+            <div class="user-info">
+                <div class="user-email">${user.email}</div>
+                <div class="user-role">Role: ${user.role || 'user'}</div>
+            </div>
+            <div class="user-actions">
+                ${user.role !== 'admin' ?
+                    `<button class="btn-promote" onclick="promoteToAdmin('${user.email}')">Make Admin</button>` :
+                    `<button class="btn-demote" onclick="demoteFromAdmin('${user.email}')">Remove Admin</button>`
+                }
+            </div>
+        </div>
+    `).join('');
+}
+
+async function promoteToAdmin(email) {
+    if (!confirm(`Are you sure you want to promote ${email} to admin?`)) {
+        return;
+    }
+
+    try {
+        const response = await jsonpRequest('changeUserRole', { 
+            email: sessionStorage.getItem('user_email'), // requesting admin email
+            targetEmail: email, // user to promote
+            role: 'admin' 
+        });
+        if (response.success) {
+            showNotification('User promoted to admin successfully!');
+            loadUsers(); // Refresh the user list
+        } else {
+            showNotification('Error promoting user. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error promoting user:', error);
+        showNotification('Error promoting user. Please try again.');
+    }
+}
+
+async function demoteFromAdmin(email) {
+    if (!confirm(`Are you sure you want to remove admin privileges from ${email}?`)) {
+        return;
+    }
+
+    try {
+        const response = await jsonpRequest('changeUserRole', { 
+            email: sessionStorage.getItem('user_email'), // requesting admin email
+            targetEmail: email, // user to demote
+            role: 'user' 
+        });
+        if (response.success) {
+            showNotification('Admin privileges removed successfully!');
+            loadUsers(); // Refresh the user list
+        } else {
+            showNotification('Error removing admin privileges. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error demoting user:', error);
+        showNotification('Error removing admin privileges. Please try again.');
+    }
+}
+
+// Show notification function (if not already defined)
+function showNotification(message) {
+    // Create notification element if it doesn't exist
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #cba230;
+            color: #17344e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+    }
+
+    notification.textContent = message;
+    notification.style.opacity = '1';
+
+    setTimeout(() => {
+        notification.style.opacity = '0';
+    }, 3000);
+}

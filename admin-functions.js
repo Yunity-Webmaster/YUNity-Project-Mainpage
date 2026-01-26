@@ -12,6 +12,9 @@ function showSection(type) {
         document.getElementById('cardSection').classList.add('active');
     } else if (type === 'citations') {
         document.getElementById('citationsSection').classList.add('active');
+    } else if (type === 'users') {
+        document.getElementById('usersSection').classList.add('active');
+        loadUsers(); // Load users when section is shown
     }
 }
 
@@ -25,6 +28,8 @@ function hideSection(type) {
     } else if (type === 'citations') {
         document.getElementById('citationsSection').classList.remove('active');
         document.getElementById('citationsOutput').classList.remove('active');
+    } else if (type === 'users') {
+        document.getElementById('usersSection').classList.remove('active');
     }
 }
 

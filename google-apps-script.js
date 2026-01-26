@@ -401,6 +401,12 @@ function doGet(e) {
         result = {success: true};
       }
 
+    } else if (action === 'getAllUsers') {
+      result = getAllUsers(data.email);
+
+    } else if (action === 'changeUserRole') {
+      result = changeUserRole(data.email, data.targetEmail, data.role);
+
     } else {
       result = {success: false, message: 'Invalid action'};
     }
@@ -422,4 +428,50 @@ function doGet(e) {
       .createTextOutput(`${callback}(${jsonResponse})`)
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
+}
+
+// Helper function to get all users (for admin use only)
+function getAllUsers(requestingEmail) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const values = sheet.getDataRange().getValues();
+  const requestingUser = values.find(row => row[0] === requestingEmail);
+
+  if (!requestingUser || requestingUser[3] !== 'admin') {
+    return {success: false, message: 'Unauthorized'};
+  }
+
+  // Return all users (excluding sensitive data like passwords)
+  const users = values.slice(1).map(row => ({
+    email: row[0],
+    role: row[3] || 'user',
+    savedArticles: row[4] || '',
+    likedArticles: row[5] || '',
+    dislikedArticles: row[6] || ''
+  }));
+
+  return {success: true, users: users};
+}
+
+// Helper function to change user role (admin only)
+function changeUserRole(requestingEmail, targetEmail, newRole) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const values = sheet.getDataRange().getValues();
+  const requestingUser = values.find(row => row[0] === requestingEmail);
+  const targetUserIndex = values.findIndex(row => row[0] === targetEmail);
+
+  if (!requestingUser || requestingUser[3] !== 'admin') {
+    return {success: false, message: 'Unauthorized'};
+  }
+
+  if (targetUserIndex === -1) {
+    return {success: false, message: 'User not found'};
+  }
+
+  if (!['user', 'admin'].includes(newRole)) {
+    return {success: false, message: 'Invalid role'};
+  }
+
+  // Update the user's role
+  sheet.getRange(targetUserIndex + 1, 4).setValue(newRole);
+  return {success: true};
 }
