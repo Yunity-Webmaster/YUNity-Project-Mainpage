@@ -12,6 +12,7 @@ function isAppsScriptConfigured() {
         notPlaceholder2: APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
         result: result
     });
+    alert('Configuration check result: ' + result + '\nURL: ' + APPS_SCRIPT_URL); // Temporary alert for debugging
     return result;
 }
 
