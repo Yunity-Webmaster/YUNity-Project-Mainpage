@@ -91,6 +91,22 @@
             <a href="#" class="share-btn">🔗 Copy Link</a>
         </div>
 
+        <!-- Article Interaction Buttons -->
+        <div class="article-interactions">
+            <button id="saveBtn" class="interaction-btn save-btn">
+                <span class="btn-icon">💾</span>
+                <span class="btn-text">Save</span>
+            </button>
+            <button id="likeBtn" class="interaction-btn like-btn">
+                <span class="btn-icon">👍</span>
+                <span class="btn-text">Like</span>
+            </button>
+            <button id="dislikeBtn" class="interaction-btn dislike-btn">
+                <span class="btn-icon">👎</span>
+                <span class="btn-text">Dislike</span>
+            </button>
+        </div>
+
         <footer class="article-citations">
             <a href="EpsteinCitations.html">View Citations</a>
         </footer>
@@ -99,5 +115,162 @@
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
     <script src="enhanced-script.js"></script>
+    <script src="admin-auth.js"></script>
+    <script>
+        // Article interaction functionality
+        const currentArticleUrl = 'Epstein.html';
+
+        // Initialize article buttons
+        function initializeArticleButtons() {
+            const saveBtn = document.getElementById('saveBtn');
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+
+            if (!saveBtn || !likeBtn || !dislikeBtn) return;
+
+            // Update button states based on user preferences
+            updateButtonStates();
+
+            // Add event listeners
+            saveBtn.addEventListener('click', toggleSave);
+            likeBtn.addEventListener('click', toggleLike);
+            dislikeBtn.addEventListener('click', toggleDislike);
+        }
+
+        // Update button visual states
+        function updateButtonStates() {
+            if (!checkAuth().loggedIn) return;
+
+            const preferences = getUserPreferences();
+            const saveBtn = document.getElementById('saveBtn');
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+
+            // Update save button
+            if (preferences.savedArticles.includes(currentArticleUrl)) {
+                saveBtn.classList.add('active');
+                saveBtn.querySelector('.btn-text').textContent = 'Saved';
+            } else {
+                saveBtn.classList.remove('active');
+                saveBtn.querySelector('.btn-text').textContent = 'Save';
+            }
+
+            // Update like/dislike buttons
+            if (preferences.likedArticles.includes(currentArticleUrl)) {
+                likeBtn.classList.add('active');
+                dislikeBtn.classList.remove('active');
+            } else if (preferences.dislikedArticles.includes(currentArticleUrl)) {
+                dislikeBtn.classList.add('active');
+                likeBtn.classList.remove('active');
+            } else {
+                likeBtn.classList.remove('active');
+                dislikeBtn.classList.remove('active');
+            }
+        }
+
+        // Toggle save article
+        async function toggleSave() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to save articles.');
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            const preferences = getUserPreferences();
+            const isSaved = preferences.savedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isSaved) {
+                    result = await unsaveArticle(currentArticleUrl);
+                    if (result.success) {
+                        saveBtn.classList.remove('active');
+                        saveBtn.querySelector('.btn-text').textContent = 'Save';
+                        showNotification('Article removed from saved!');
+                    }
+                } else {
+                    result = await saveArticle(currentArticleUrl);
+                    if (result.success) {
+                        saveBtn.classList.add('active');
+                        saveBtn.querySelector('.btn-text').textContent = 'Saved';
+                        showNotification('Article saved!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating save status. Please try again.');
+            }
+        }
+
+        // Toggle like article
+        async function toggleLike() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to like articles.');
+                return;
+            }
+
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+            const preferences = getUserPreferences();
+            const isLiked = preferences.likedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isLiked) {
+                    result = await removeRating(currentArticleUrl);
+                    if (result.success) {
+                        likeBtn.classList.remove('active');
+                        showNotification('Like removed!');
+                    }
+                } else {
+                    result = await likeArticle(currentArticleUrl);
+                    if (result.success) {
+                        likeBtn.classList.add('active');
+                        dislikeBtn.classList.remove('active');
+                        showNotification('Article liked!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating rating. Please try again.');
+            }
+        }
+
+        // Toggle dislike article
+        async function toggleDislike() {
+            if (!checkAuth().loggedIn) {
+                alert('Please log in to dislike articles.');
+                return;
+            }
+
+            const likeBtn = document.getElementById('likeBtn');
+            const dislikeBtn = document.getElementById('dislikeBtn');
+            const preferences = getUserPreferences();
+            const isDisliked = preferences.dislikedArticles.includes(currentArticleUrl);
+
+            try {
+                let result;
+                if (isDisliked) {
+                    result = await removeRating(currentArticleUrl);
+                    if (result.success) {
+                        dislikeBtn.classList.remove('active');
+                        showNotification('Dislike removed!');
+                    }
+                } else {
+                    result = await dislikeArticle(currentArticleUrl);
+                    if (result.success) {
+                        dislikeBtn.classList.add('active');
+                        likeBtn.classList.remove('active');
+                        showNotification('Article disliked!');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error updating rating. Please try again.');
+            }
+        }
+
+        // Initialize buttons when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeArticleButtons();
+        });
+    </script>
 </body>
 </html>

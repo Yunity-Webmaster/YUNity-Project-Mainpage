@@ -1,11 +1,16 @@
 // Hash password with salt using SHA-256
 function hashPassword(password, salt) {
-  const data = password + salt;
-  const hashBuffer = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data);
-  const hashArray = hashBuffer.map(function(byte) {
-    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-  });
-  return hashArray.join('');
+  try {
+    const data = password + salt;
+    const hashBuffer = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data);
+    const hashArray = hashBuffer.map(function(byte) {
+      return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+    });
+    return hashArray.join('');
+  } catch (error) {
+    Logger.log('hashPassword error: ' + error.toString());
+    throw error;
+  }
 }
 
 function doPost(e) {
@@ -222,6 +227,7 @@ function doGet(e) {
 
     const sheet = SpreadsheetApp.getActiveSheet();
     Logger.log('Sheet name: ' + sheet.getName());
+    Logger.log('Script executed successfully - basic setup complete');
 
     let result;
 
