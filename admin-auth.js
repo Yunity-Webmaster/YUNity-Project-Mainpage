@@ -4,7 +4,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0K
 
 // Check if Apps Script URL is configured
 function isAppsScriptConfigured() {
-    return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0KkuLTonshOreyeSW8EexXzryNHT3JzLtsEg4jwjDV5R01KAc06WJ1/exec' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxMoXo56CQB8G0KkuLTonshOreyeSW8EexXzryNHT3JzLtsEg4jwjDV5R01KAc06WJ1/exec';
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
 }
 
 // JSONP fallback for when fetch fails due to CSP restrictions
