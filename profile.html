@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Yung Politics</title>
+    <link rel="stylesheet" href="enhanced-style.css">
+    <script src="admin-auth.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Yung Politics</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="domestic.html">Domestic</a></li>
+                <li><a href="foreign.html">Foreign</a></li>
+                <li><a href="Local.html">Local News</a></li>
+                <li><a href="Election.html">2025 Election</a></li>
+                <li><a href="international.html">International</a></li>
+                <li><a href="Emergency.html">Emergency Statements</a></li>
+                <li><a href="oped.html">Opinion</a></li>
+                <li><a href="AboutUs.html">About Us</a></li>
+                <li id="adminPageLink" style="display:none;"><a href="admin.html">Admin</a></li>
+                <li id="profileLink" style="display:none;"><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="adminLoginBtn">Login</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search articles..." aria-label="Search">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-content">
+            <span class="login-close">&times;</span>
+            <h2 id="modalTitle">Login</h2>
+            <div class="auth-toggle">
+                <button id="loginTab" class="auth-tab active">Login</button>
+                <button id="registerTab" class="auth-tab">Create Account</button>
+            </div>
+            <form id="loginForm">
+                <input type="email" id="username" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" style="display: none;" required>
+                <button type="submit" id="submitBtn">Login</button>
+            </form>
+            <p id="loginError" class="login-error"></p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="profile-section">
+            <h1>User Profile</h1>
+            <div class="profile-content">
+                <div class="profile-info">
+                    <h2>Welcome to your profile!</h2>
+                    <p>You are logged in as a regular user.</p>
+                    <p>This is your personal dashboard where you can manage your account settings, view your saved articles, and customize your experience.</p>
+
+                    <div class="profile-actions">
+                        <h3>Available Features:</h3>
+                        <ul>
+                            <li>View saved articles</li>
+                            <li>Manage account settings</li>
+                            <li>Customize notifications</li>
+                            <li>Access premium content (coming soon)</li>
+                        </ul>
+                    </div>
+
+                    <div class="saved-articles-section">
+                        <h3>Your Saved Articles</h3>
+                        <div id="savedArticlesList" class="saved-articles-list">
+                            <p>Loading saved articles...</p>
+                        </div>
+                    </div>
+
+                    <div class="logout-section">
+                        <button id="logoutLink" class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Yung Politics. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="enhanced-script.js"></script>
+    <script>
+        // Display saved articles on profile page
+        function displaySavedArticles() {
+            const savedArticlesList = document.getElementById('savedArticlesList');
+            const preferences = getUserPreferences();
+            const savedArticles = preferences.savedArticles;
+
+            if (savedArticles.length === 0) {
+                savedArticlesList.innerHTML = '<p>You haven\'t saved any articles yet.</p>';
+                return;
+            }
+
+            const articlesHTML = savedArticles.map(articleUrl => {
+                // Extract article title from URL (remove .html and replace hyphens with spaces)
+                const title = articleUrl.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                return `
+                    <div class="saved-article-item">
+                        <a href="${articleUrl}" class="saved-article-link">${title}</a>
+                        <button class="unsave-btn" onclick="unsaveArticle('${articleUrl}').then(() => displaySavedArticles())">Unsave</button>
+                    </div>
+                `;
+            }).join('');
+
+            savedArticlesList.innerHTML = articlesHTML;
+        }
+
+        // Load saved articles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            displaySavedArticles();
+        });
+    </script>
+</body>
+</html>

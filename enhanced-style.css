@@ -1258,6 +1258,33 @@ body.works-cited-page {
     font-weight: 300;
 }
 
+.auth-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.auth-tab {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(203,162,48,0.3);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.auth-tab.active {
+    background: #cba230;
+    color: #17344e;
+    border-color: #cba230;
+}
+
+.auth-tab:hover {
+    border-color: #cba230;
+}
+
 .login-close {
     color: #cba230;
     float: right;
@@ -1560,7 +1587,263 @@ body.works-cited-page {
     }
 }
 /* =====================================
-   REVEAL ADMIN BUTTON
+   PROFILE PAGE STYLES
+   ===================================== */
+.profile-section {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.profile-content {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(203,162,48,0.3);
+    border-radius: 15px;
+    padding: 40px;
+}
+
+.profile-info h2 {
+    color: #cba230;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-info p {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.profile-actions {
+    margin-bottom: 40px;
+}
+
+.profile-actions h3 {
+    color: #cba230;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 15px;
+}
+
+.profile-actions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-actions li {
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.profile-actions li::before {
+    content: "✓";
+    color: #cba230;
+    position: absolute;
+    left: 0;
+}
+
+.saved-articles-section {
+    margin-top: 40px;
+}
+
+.saved-articles-section h3 {
+    color: #cba230;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.saved-articles-list {
+    display: grid;
+    gap: 15px;
+}
+
+.saved-article-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(203,162,48,0.2);
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.saved-article-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    flex: 1;
+}
+
+.saved-article-link:hover {
+    color: #cba230;
+}
+
+.unsave-btn {
+    background: rgba(255,77,77,0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(255,77,77,0.3);
+    border-radius: 6px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.unsave-btn:hover {
+    background: rgba(255,77,77,0.3);
+    border-color: #ff6b6b;
+}
+
+.logout-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.logout-btn {
+    padding: 15px 40px;
+    background: rgba(255,77,77,0.2);
+    color: #ff6b6b;
+    border: 2px solid rgba(255,77,77,0.3);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: "Times New Roman", serif;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255,77,77,0.4);
+    border-color: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+/* =====================================
+   ARTICLE INTERACTION BUTTONS
+   ===================================== */
+.article-interactions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0 20px 0;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    border-top: 1px solid rgba(203,162,48,0.2);
+    border-bottom: 1px solid rgba(203,162,48,0.2);
+}
+
+.interaction-btn {
+    padding: 12px 20px;
+    border: 2px solid rgba(203,162,48,0.3);
+    border-radius: 25px;
+    background: rgba(255,255,255,0.05);
+    color: #cba230;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.interaction-btn:hover {
+    background: rgba(203,162,48,0.1);
+    border-color: #cba230;
+    transform: translateY(-2px);
+}
+
+.interaction-btn.active {
+    background: #cba230;
+    color: #17344e;
+    border-color: #cba230;
+}
+
+.interaction-btn.active.like {
+    background: #4ade80;
+    color: #17344e;
+    border-color: #4ade80;
+}
+
+.interaction-btn.active.dislike {
+    background: #ff6b6b;
+    color: #17344e;
+    border-color: #ff6b6b;
+}
+
+.interaction-btn.save.active {
+    background: #60a5fa;
+    color: #17344e;
+    border-color: #60a5fa;
+}
+
+.interaction-btn i {
+    font-size: 16px;
+}
+
+/* Social Share Buttons */
+.social-share {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0 40px 0;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 12px 24px;
+    background: rgba(203,162,48,0.2);
+    color: #cba230;
+    border: 2px solid #cba230;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: "Calibri", sans-serif;
+}
+
+.share-btn:hover {
+    background: #cba230;
+    color: #17344e;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .article-interactions {
+        gap: 10px;
+        margin: 20px 0 15px 0;
+        padding: 15px 0;
+    }
+
+    .interaction-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+        min-width: 100px;
+    }
+
+    .social-share {
+        gap: 10px;
+        margin: 20px 0 30px 0;
+    }
+
+    .share-btn {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+}
+   /* =====================================
+   ADMIN BUTTONS
    ===================================== */
 .reveal-admin-btn {
     position: fixed;
