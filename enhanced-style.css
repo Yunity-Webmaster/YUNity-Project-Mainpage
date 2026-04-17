@@ -447,6 +447,10 @@ img {
     background-image: url("Trump.jpg");
 }
 
+.IranImage {
+   background-image: url("iran.jpg");
+}
+
 .article-category {
     position: absolute;
     top: 15px;
