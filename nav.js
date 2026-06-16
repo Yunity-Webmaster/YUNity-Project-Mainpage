@@ -11,6 +11,10 @@
       }
     } catch (err) {
       console.error('Failed to load nav.html', err);
+    } finally {
+      // Always fire nav:ready so admin-auth.js can wire up the login button,
+      // even if the fetch failed (the modal HTML is still on the page).
+      document.dispatchEvent(new CustomEvent('nav:ready'));
     }
   }
 
