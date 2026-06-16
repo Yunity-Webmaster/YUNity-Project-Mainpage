@@ -44,6 +44,22 @@
         <div class="article-featured-image IranImage"></div>
         <p class="image-credit">By Matthäus Merian - Raremaps.com, Public Domain, https://commons.wikimedia.org/w/index.php?curid=91347471</p>
 
+        <!-- Article Interaction Buttons -->
+        <div class="article-interactions">
+            <button id="saveBtn" class="interaction-btn save-btn" aria-label="Save article">
+                <span class="btn-icon">💾</span>
+                <span class="btn-text">Save</span>
+            </button>
+            <button id="likeBtn" class="interaction-btn like-btn" aria-label="Like article">
+                <span class="btn-icon">👍</span>
+                <span class="btn-text">Like</span>
+            </button>
+            <button id="dislikeBtn" class="interaction-btn dislike-btn" aria-label="Dislike article">
+                <span class="btn-icon">👎</span>
+                <span class="btn-text">Dislike</span>
+            </button>
+        </div>
+
         <div class="article-body">
             <p>On Saturday, February 28th, Americans woke up to the news that the United States, in conjunction with Israel, launched a major military operation, named Operation Epic Fury, against Iran. The attack comes after President Donald J. Trump accused Iran in his 2026 State of the Union speech of reviving attempts at gaining nuclear weapons, heightening tensions in an already unstable Middle East region. While negotiations have been ongoing between the US and Iran, President Trump was reportedly “not happy” with how the negotiations ended.</p>
 
@@ -60,10 +76,7 @@
 
         <!-- Social Share Buttons -->
         <div class="social-share" aria-label="Share this article">
-            <a href="#" class="share-btn" data-service="twitter" role="button" tabindex="0" aria-label="Share on Twitter">🐦 Twitter</a>
-            <a href="#" class="share-btn" data-service="instagram" role="button" tabindex="0" aria-label="Share on Instagram">📸 Instagram</a>
-            <a href="#" class="share-btn" data-service="facebook" role="button" tabindex="0" aria-label="Share on Facebook">📘 Facebook</a>
-            <a href="#" class="share-btn" data-service="linkedin" role="button" tabindex="0" aria-label="Share on LinkedIn">🔗 LinkedIn</a>
+            <a href="#" class="share-btn" data-service="twitter" role="button" tabindex="0" aria-label="Share on X">🐦 X</a>
             <a href="#" class="share-btn" data-service="copy" role="button" tabindex="0" aria-label="Copy link to clipboard">🔗 Copy Link</a>
         </div>
 
@@ -77,5 +90,6 @@
     <script src="nav.js"></script>
     <script src="articles-loader.js"></script>
     <script src="enhanced-script.js"></script>
+    <script src="admin-auth.js"></script>
 </body>
 </html>

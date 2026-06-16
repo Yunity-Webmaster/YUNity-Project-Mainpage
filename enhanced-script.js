@@ -243,31 +243,6 @@ function copyTextToClipboard(text) {
     });
 }
 
-function openInstagram() {
-    const appUrl = 'instagram://app';
-    const webUrl = 'https://www.instagram.com/';
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-        window.location = appUrl;
-        setTimeout(() => window.open(webUrl, '_blank'), 800);
-    } else {
-        window.open(webUrl, '_blank', 'noopener,noreferrer');
-    }
-}
-
-async function shareToInstagramCopyOpen() {
-    const url = window.location.href;
-    try {
-        await copyTextToClipboard(url);
-        showNotification('✓ Link copied to clipboard! Paste it into Instagram.', 'success');
-        openInstagram();
-    } catch (err) {
-        console.error('Clipboard copy failed:', err);
-        showNotification('✗ Couldn\'t copy link automatically. Copy manually from the address bar.', 'error');
-        openInstagram();
-    }
-}
 
 function copyLinkToClipboard() {
     const url = window.location.href;
@@ -310,9 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.createElement('div');
             container.className = 'social-share';
             container.innerHTML = `
-                <a href="#" class="share-btn" data-service="twitter" role="button" tabindex="0" aria-label="Share on Twitter">🐦 Twitter</a>
-                <a href="#" class="share-btn" data-service="facebook" role="button" tabindex="0" aria-label="Share on Facebook">📘 Facebook</a>
-                <a href="#" class="share-btn" data-service="linkedin" role="button" tabindex="0" aria-label="Share on LinkedIn">🔗 LinkedIn</a>
+                <a href="#" class="share-btn" data-service="twitter" role="button" tabindex="0" aria-label="Share on X">🐦 X</a>
                 <a href="#" class="share-btn" data-service="copy" role="button" tabindex="0" aria-label="Copy link to clipboard">🔗 Copy Link</a>
             `;
             const footer = article.querySelector('.article-citations') || article.querySelector('.article-footer');
@@ -321,7 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const shareButtons = document.querySelectorAll('.share-btn');
+    // Remove any existing share buttons that are not Twitter/X or Copy
+    document.querySelectorAll('.share-btn').forEach(btn => {
+        const svc = (btn.dataset && btn.dataset.service) ? btn.dataset.service.toLowerCase() : btn.textContent.toLowerCase();
+        if (!(svc.includes('twitter') || svc.includes('x') || svc.includes('🐦') || svc.includes('copy') || svc.includes('🔗') || svc.includes('link'))) {
+            btn.remove();
+        }
+    });
+
+    let shareButtons = document.querySelectorAll('.share-btn');
     if (!shareButtons.length) {
         return;
     }
@@ -330,21 +311,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataService = (btn.dataset && btn.dataset.service) ? btn.dataset.service.toLowerCase() : null;
         const label = dataService || btn.textContent.toLowerCase().trim();
 
-        // --- Twitter ---
-        if (label.includes('twitter') || label.includes('🐦')) {
+        // Only handle X (Twitter) and Copy Link
+        if (label.includes('twitter') || label.includes('x') || label.includes('🐦')) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
-                // Track Twitter share event in Google Analytics
+
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'share', {
-                        method: 'Twitter',
+                        method: 'X',
                         content_type: 'article',
                         item_id: document.title,
                         content_url: window.location.href
                     });
                 }
-                
+
                 const url = encodeURIComponent(window.location.href);
                 const text = encodeURIComponent('Check out this article from The YUNity Project: ');
                 window.open(
@@ -353,45 +333,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     'width=600,height=400'
                 );
             });
-        }
-
-        // --- Instagram ---
-        else if (label.includes('instagram') || label.includes('📸')) {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Track Instagram share event in Google Analytics
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'share', {
-                        method: 'Instagram',
-                        content_type: 'article',
-                        item_id: document.title,
-                        content_url: window.location.href
-                    });
-                }
-                
-                const url = window.location.href;
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(url).then(() => {
-                        alert('✓ Link copied! Now paste it into your Instagram story or bio.');
-                        window.open('https://www.instagram.com/', '_blank');
-                    }).catch(() => {
-                        alert('✗ Failed to copy. Try manually sharing.');
-                        window.open('https://www.instagram.com/', '_blank');
-                    });
-                } else {
-                    alert('Link copied! Now paste it into Instagram.');
-                    window.open('https://www.instagram.com/', '_blank');
+            // Keyboard accessibility
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
                 }
             });
+            return;
         }
 
-        // --- Copy link ---
-        else if (label.includes('copy') || label.includes('link') || label.includes('🔗')) {
+        if (label.includes('copy') || label.includes('link') || label.includes('🔗')) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
-                // Track Copy Link event in Google Analytics
+
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'share', {
                         method: 'Copy Link',
@@ -400,58 +355,30 @@ document.addEventListener('DOMContentLoaded', () => {
                         content_url: window.location.href
                     });
                 }
-                
+
                 const url = window.location.href;
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(url).then(() => {
-                        alert('✓ Link copied to clipboard!');
+                        showNotification('✓ Link copied to clipboard!', 'success');
                     }).catch(() => {
-                        alert('✗ Failed to copy link.');
+                        fallbackCopyToClipboard(url);
                     });
                 } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = url;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    alert('✓ Link copied to clipboard!');
+                    fallbackCopyToClipboard(url);
                 }
             });
+            // Keyboard accessibility
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
+            return;
         }
 
-        // --- Facebook ---
-        else if (label.includes('facebook') || label.includes('📘')) {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'share', { method: 'Facebook', content_type: 'article', item_id: document.title, content_url: window.location.href });
-                }
-                const url = encodeURIComponent(window.location.href);
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=700,height=500');
-            });
-        }
-
-        // --- LinkedIn ---
-        else if (label.includes('linkedin')) {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'share', { method: 'LinkedIn', content_type: 'article', item_id: document.title, content_url: window.location.href });
-                }
-                const url = encodeURIComponent(window.location.href);
-                const title = encodeURIComponent(document.title || '');
-                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`, '_blank', 'width=700,height=500');
-            });
-        }
-        // Keyboard accessibility: Enter or Space activates the button
-        btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-            }
-        });
-        }
+        // Unexpected buttons: remove to enforce policy
+        btn.remove();
     });
 });
 
