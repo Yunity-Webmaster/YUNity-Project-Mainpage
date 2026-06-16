@@ -754,3 +754,155 @@ function showNotification(message) {
         notification.style.opacity = '0';
     }, 3000);
 }
+
+// Initialize article save/like/dislike interactions site-wide.
+// Falls back to page-defined handlers if they exist (keeps backward compatibility).
+document.addEventListener('DOMContentLoaded', () => {
+    const articleUrl = window.currentArticleUrl || (window.location.pathname ? window.location.pathname.split('/').pop() : document.title || '');
+
+    const saveBtn = document.getElementById('saveBtn');
+    const likeBtn = document.getElementById('likeBtn');
+    const dislikeBtn = document.getElementById('dislikeBtn');
+
+    if (!saveBtn && !likeBtn && !dislikeBtn) return;
+
+    // Helper to refresh button visuals from session storage
+    function refreshButtonStates() {
+        const prefs = getUserPreferences();
+        if (saveBtn) {
+            if (prefs.savedArticles.includes(articleUrl)) {
+                saveBtn.classList.add('active');
+                const txt = saveBtn.querySelector('.btn-text'); if (txt) txt.textContent = 'Saved';
+            } else {
+                saveBtn.classList.remove('active');
+                const txt = saveBtn.querySelector('.btn-text'); if (txt) txt.textContent = 'Save';
+            }
+        }
+        if (likeBtn && dislikeBtn) {
+            if (prefs.likedArticles.includes(articleUrl)) {
+                likeBtn.classList.add('active'); dislikeBtn.classList.remove('active');
+            } else if (prefs.dislikedArticles.includes(articleUrl)) {
+                dislikeBtn.classList.add('active'); likeBtn.classList.remove('active');
+            } else {
+                likeBtn.classList.remove('active'); dislikeBtn.classList.remove('active');
+            }
+        }
+    }
+
+    // Generic handlers (used if page doesn't provide custom toggle functions)
+    async function genericToggleSave(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to save articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isSaved = prefs.savedArticles.includes(articleUrl);
+        try {
+            if (isSaved) {
+                const res = await unsaveArticle(articleUrl);
+                if (res && res.success) {
+                    showNotification('Article removed from saved!', 'success');
+                }
+            } else {
+                const res = await saveArticle(articleUrl);
+                if (res && res.success) {
+                    showNotification('Article saved!', 'success');
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating save status. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    async function genericToggleLike(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to like articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isLiked = prefs.likedArticles.includes(articleUrl);
+        try {
+            if (isLiked) {
+                const res = await removeRating(articleUrl);
+                if (res && res.success) showNotification('Like removed!', 'success');
+            } else {
+                const res = await likeArticle(articleUrl);
+                if (res && res.success) showNotification('Article liked!', 'success');
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating rating. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    async function genericToggleDislike(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to dislike articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isDisliked = prefs.dislikedArticles.includes(articleUrl);
+        try {
+            if (isDisliked) {
+                const res = await removeRating(articleUrl);
+                if (res && res.success) showNotification('Dislike removed!', 'success');
+            } else {
+                const res = await dislikeArticle(articleUrl);
+                if (res && res.success) showNotification('Article disliked!', 'success');
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating rating. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    // Wire buttons only if not already wired by page scripts
+    if (saveBtn && !saveBtn.dataset.wired) {
+        if (typeof window.toggleSave === 'function') saveBtn.addEventListener('click', window.toggleSave);
+        else saveBtn.addEventListener('click', genericToggleSave);
+        saveBtn.dataset.wired = '1';
+    }
+    if (likeBtn && !likeBtn.dataset.wired) {
+        if (typeof window.toggleLike === 'function') likeBtn.addEventListener('click', window.toggleLike);
+        else likeBtn.addEventListener('click', genericToggleLike);
+        likeBtn.dataset.wired = '1';
+    }
+    if (dislikeBtn && !dislikeBtn.dataset.wired) {
+        if (typeof window.toggleDislike === 'function') dislikeBtn.addEventListener('click', window.toggleDislike);
+        else dislikeBtn.addEventListener('click', genericToggleDislike);
+        dislikeBtn.dataset.wired = '1';
+    }
+
+    // Keyboard accessibility
+    [saveBtn, likeBtn, dislikeBtn].forEach(btn => {
+        if (!btn) return;
+        if (!btn.dataset.keywired) {
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
+            btn.dataset.keywired = '1';
+        }
+    });
+
+    // Refresh UI on auth changes
+    refreshButtonStates();
+});
