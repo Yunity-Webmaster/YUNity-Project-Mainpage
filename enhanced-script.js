@@ -65,7 +65,7 @@ if (backToTop) {
 // =====================================
 const searchBox = document.querySelector('.search-box');
 if (searchBox) {
-    const articles = [
+    const articles = (window && window.ARTICLES) ? window.ARTICLES : [
         {
             title: "The Federal Government Shutdown: How a Lack of Compromise Led to Where We Are Today",
             url: "Article2.html",
@@ -302,13 +302,33 @@ function fallbackCopyToClipboard(text) {
 // ATTACH SHARE BUTTON HANDLERS
 // =====================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Ensure share buttons exist on article pages
+    const articles = document.querySelectorAll('.article-page');
+    articles.forEach(article => {
+        const hasShare = article.querySelector('.share-btn');
+        if (!hasShare) {
+            const container = document.createElement('div');
+            container.className = 'social-share';
+            container.innerHTML = `
+                <a href="#" class="share-btn" data-service="twitter" role="button" tabindex="0" aria-label="Share on Twitter">🐦 Twitter</a>
+                <a href="#" class="share-btn" data-service="facebook" role="button" tabindex="0" aria-label="Share on Facebook">📘 Facebook</a>
+                <a href="#" class="share-btn" data-service="linkedin" role="button" tabindex="0" aria-label="Share on LinkedIn">🔗 LinkedIn</a>
+                <a href="#" class="share-btn" data-service="copy" role="button" tabindex="0" aria-label="Copy link to clipboard">🔗 Copy Link</a>
+            `;
+            const footer = article.querySelector('.article-citations') || article.querySelector('.article-footer');
+            if (footer) footer.parentElement.insertBefore(container, footer);
+            else article.appendChild(container);
+        }
+    });
+
     const shareButtons = document.querySelectorAll('.share-btn');
     if (!shareButtons.length) {
         return;
     }
 
     shareButtons.forEach(btn => {
-        const label = btn.textContent.toLowerCase().trim();
+        const dataService = (btn.dataset && btn.dataset.service) ? btn.dataset.service.toLowerCase() : null;
+        const label = dataService || btn.textContent.toLowerCase().trim();
 
         // --- Twitter ---
         if (label.includes('twitter') || label.includes('🐦')) {
@@ -398,6 +418,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('✓ Link copied to clipboard!');
                 }
             });
+        }
+
+        // --- Facebook ---
+        else if (label.includes('facebook') || label.includes('📘')) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'share', { method: 'Facebook', content_type: 'article', item_id: document.title, content_url: window.location.href });
+                }
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=700,height=500');
+            });
+        }
+
+        // --- LinkedIn ---
+        else if (label.includes('linkedin')) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'share', { method: 'LinkedIn', content_type: 'article', item_id: document.title, content_url: window.location.href });
+                }
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent(document.title || '');
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`, '_blank', 'width=700,height=500');
+            });
+        }
+        // Keyboard accessibility: Enter or Space activates the button
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+            }
+        });
         }
     });
 });

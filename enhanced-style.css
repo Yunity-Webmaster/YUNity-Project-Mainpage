@@ -638,6 +638,15 @@ a[href*="flickr"] {
     flex-wrap: wrap;
 }
 
+/* Backwards-compatible class used on some pages */
+.share-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
 .share-btn {
     padding: 12px 24px;
     background: rgba(203,162,48,0.2);

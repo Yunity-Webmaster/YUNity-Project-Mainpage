@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <title>YUNity Admin</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+    <style>
+      body{font-family:Roboto,Arial;margin:20px;color:#222}
+      .header{display:flex;gap:12px;align-items:center}
+      .actions{margin-top:18px}
+      textarea{width:100%;min-height:120px}
+      .small{font-size:0.9rem;color:#666}
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>YUNity Admin</h1>
+      <div id="userInfo" class="small"></div>
+    </div>
+
+    <div class="actions">
+      <button id="refresh">Load Articles</button>
+      <button id="newArticle">New Article</button>
+      <button id="logout" style="float:right;">Sign out</button>
+    </div>
+
+    <div id="list"></div>
+
+    <template id="articleFormTpl">
+      <div>
+        <h3>Create Article</h3>
+        <label>Title<input id="title"></label><br>
+        <label>URL<input id="url"></label><br>
+        <label>Category<input id="category"></label><br>
+        <label>Date<input id="date"></label><br>
+        <label>Excerpt<textarea id="excerpt"></textarea></label><br>
+        <button id="save">Save</button>
+      </div>
+    </template>
+
+    <script>
+      function show(msg){ console.log(msg); }
+
+      function loadUser(){
+        google.script.run.withSuccessHandler(user => {
+          document.getElementById('userInfo').textContent = user.email + (user.isAdmin ? ' (admin)' : '');
+        }).getCurrentUser();
+      }
+
+      function loadArticles(){
+        google.script.run.withSuccessHandler(renderArticles).getArticles();
+      }
+
+      function renderArticles(articles){
+        const container = document.getElementById('list');
+        container.innerHTML = '';
+        if(!articles || !articles.length){ container.textContent = 'No articles.'; return; }
+        articles.forEach(a => {
+          const el = document.createElement('div');
+          el.style.border = '1px solid #ddd'; el.style.padding = '8px'; el.style.margin = '8px 0';
+          el.innerHTML = `<strong>${a.title}</strong> — ${a.url} <div class="small">${a.category} • ${a.date}</div>`;
+          const del = document.createElement('button'); del.textContent = 'Delete'; del.onclick = () => {
+            if(!confirm('Delete this article?')) return;
+            google.script.run.withSuccessHandler(loadArticles).removeArticleByUrl(a.url);
+          };
+          el.appendChild(del);
+          container.appendChild(el);
+        });
+      }
+
+      document.getElementById('refresh').addEventListener('click', loadArticles);
+      document.getElementById('newArticle').addEventListener('click', ()=>{
+        const tpl = document.getElementById('articleFormTpl');
+        const node = tpl.content.cloneNode(true);
+        document.getElementById('list').prepend(node);
+        const save = document.getElementById('save');
+        save.onclick = ()=>{
+          const article = {
+            title: document.getElementById('title').value,
+            url: document.getElementById('url').value,
+            category: document.getElementById('category').value,
+            date: document.getElementById('date').value,
+            excerpt: document.getElementById('excerpt').value
+          };
+          google.script.run.withSuccessHandler(loadArticles).addArticle(article);
+        };
+      });
+
+      // Basic sign-out: redirect to Google sign-out page then back (makes user re-auth next time)
+      document.getElementById('logout').addEventListener('click', ()=>{
+        window.open('https://accounts.google.com/Logout');
+      });
+
+      // Prevent accidental form submission via Enter on inputs
+      document.addEventListener('keydown', function(e){
+        const tag = e.target && e.target.tagName;
+        if (e.key === 'Enter' && tag === 'INPUT') {
+          e.preventDefault();
+        }
+      });
+
+      // init
+      loadUser(); loadArticles();
+    </script>
+  </body>
+</html>

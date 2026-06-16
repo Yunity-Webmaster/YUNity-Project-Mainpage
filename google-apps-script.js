@@ -13,6 +13,53 @@ function hashPassword(password, salt) {
   }
 }
 
+// Helper: update a user's CSV field (columnIndex is 1-based)
+function updateUserField(email, columnIndex, updater) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const values = sheet.getDataRange().getValues();
+  const userIndex = values.findIndex(row => row[0] === email);
+  if (userIndex === -1) return { success: false, message: 'User not found' };
+  const raw = values[userIndex][columnIndex - 1] || '';
+  const current = raw ? raw.toString().split(',').filter(Boolean) : [];
+  const updated = updater(current.slice()) || [];
+  sheet.getRange(userIndex + 1, columnIndex).setValue(updated.join(','));
+  return { success: true };
+}
+
+function saveArticleForEmail(email, articleUrl) {
+  return updateUserField(email, 5, current => {
+    if (!current.includes(articleUrl)) current.push(articleUrl);
+    return current;
+  });
+}
+
+function unsaveArticleForEmail(email, articleUrl) {
+  return updateUserField(email, 5, current => current.filter(u => u !== articleUrl));
+}
+
+function likeArticleForEmail(email, articleUrl) {
+  // remove from disliked, add to liked
+  updateUserField(email, 7, current => current.filter(u => u !== articleUrl));
+  return updateUserField(email, 6, current => {
+    if (!current.includes(articleUrl)) current.push(articleUrl);
+    return current;
+  });
+}
+
+function dislikeArticleForEmail(email, articleUrl) {
+  // remove from liked, add to disliked
+  updateUserField(email, 6, current => current.filter(u => u !== articleUrl));
+  return updateUserField(email, 7, current => {
+    if (!current.includes(articleUrl)) current.push(articleUrl);
+    return current;
+  });
+}
+
+function removeRatingForEmail(email, articleUrl) {
+  updateUserField(email, 6, current => current.filter(u => u !== articleUrl));
+  return updateUserField(email, 7, current => current.filter(u => u !== articleUrl));
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -71,117 +118,27 @@ function doPost(e) {
     } else if (action === 'saveArticle') {
       const email = data.email;
       const articleUrl = data.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentSaved = values[userIndex][4] || '';
-        const savedArticles = currentSaved ? currentSaved.split(',') : [];
-
-        if (!savedArticles.includes(articleUrl)) {
-          savedArticles.push(articleUrl);
-          sheet.getRange(userIndex + 1, 5).setValue(savedArticles.join(','));
-        }
-        result = {success: true};
-      }
+      result = saveArticleForEmail(email, articleUrl);
 
     } else if (action === 'unsaveArticle') {
       const email = data.email;
       const articleUrl = data.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentSaved = values[userIndex][4] || '';
-        const savedArticles = currentSaved ? currentSaved.split(',') : [];
-        const filteredArticles = savedArticles.filter(url => url !== articleUrl);
-        sheet.getRange(userIndex + 1, 5).setValue(filteredArticles.join(','));
-        result = {success: true};
-      }
+      result = unsaveArticleForEmail(email, articleUrl);
 
     } else if (action === 'likeArticle') {
       const email = data.email;
       const articleUrl = data.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from disliked if present
-        const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
-        // Add to liked if not already there
-        if (!likedArticles.includes(articleUrl)) {
-          likedArticles.push(articleUrl);
-        }
-
-        sheet.getRange(userIndex + 1, 6).setValue(likedArticles.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(filteredDisliked.join(','));
-        result = {success: true};
-      }
+      result = likeArticleForEmail(email, articleUrl);
 
     } else if (action === 'dislikeArticle') {
       const email = data.email;
       const articleUrl = data.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from liked if present
-        const filteredLiked = likedArticles.filter(url => url !== articleUrl);
-        // Add to disliked if not already there
-        if (!dislikedArticles.includes(articleUrl)) {
-          dislikedArticles.push(articleUrl);
-        }
-
-        sheet.getRange(userIndex + 1, 6).setValue(filteredLiked.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(dislikedArticles.join(','));
-        result = {success: true};
-      }
+      result = dislikeArticleForEmail(email, articleUrl);
 
     } else if (action === 'removeRating') {
       const email = data.email;
       const articleUrl = data.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from both lists
-        const filteredLiked = likedArticles.filter(url => url !== articleUrl);
-        const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
-
-        sheet.getRange(userIndex + 1, 6).setValue(filteredLiked.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(filteredDisliked.join(','));
-        result = {success: true};
-      }
+      result = removeRatingForEmail(email, articleUrl);
 
     } else {
       result = {success: false, message: 'Invalid action'};
@@ -289,117 +246,27 @@ function doGet(e) {
     } else if (action === 'saveArticle') {
       const email = e.parameter.email;
       const articleUrl = e.parameter.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentSaved = values[userIndex][4] || '';
-        const savedArticles = currentSaved ? currentSaved.split(',') : [];
-
-        if (!savedArticles.includes(articleUrl)) {
-          savedArticles.push(articleUrl);
-          sheet.getRange(userIndex + 1, 5).setValue(savedArticles.join(','));
-        }
-        result = {success: true};
-      }
+      result = saveArticleForEmail(email, articleUrl);
 
     } else if (action === 'unsaveArticle') {
       const email = e.parameter.email;
       const articleUrl = e.parameter.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentSaved = values[userIndex][4] || '';
-        const savedArticles = currentSaved ? currentSaved.split(',') : [];
-        const filteredArticles = savedArticles.filter(url => url !== articleUrl);
-        sheet.getRange(userIndex + 1, 5).setValue(filteredArticles.join(','));
-        result = {success: true};
-      }
+      result = unsaveArticleForEmail(email, articleUrl);
 
     } else if (action === 'likeArticle') {
       const email = e.parameter.email;
       const articleUrl = e.parameter.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from disliked if present
-        const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
-        // Add to liked if not already there
-        if (!likedArticles.includes(articleUrl)) {
-          likedArticles.push(articleUrl);
-        }
-
-        sheet.getRange(userIndex + 1, 6).setValue(likedArticles.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(filteredDisliked.join(','));
-        result = {success: true};
-      }
+      result = likeArticleForEmail(email, articleUrl);
 
     } else if (action === 'dislikeArticle') {
       const email = e.parameter.email;
       const articleUrl = e.parameter.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from liked if present
-        const filteredLiked = likedArticles.filter(url => url !== articleUrl);
-        // Add to disliked if not already there
-        if (!dislikedArticles.includes(articleUrl)) {
-          dislikedArticles.push(articleUrl);
-        }
-
-        sheet.getRange(userIndex + 1, 6).setValue(filteredLiked.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(dislikedArticles.join(','));
-        result = {success: true};
-      }
+      result = dislikeArticleForEmail(email, articleUrl);
 
     } else if (action === 'removeRating') {
       const email = e.parameter.email;
       const articleUrl = e.parameter.articleUrl;
-
-      const values = sheet.getDataRange().getValues();
-      const userIndex = values.findIndex(row => row[0] === email);
-
-      if (userIndex === -1) {
-        result = {success: false, message: 'User not found'};
-      } else {
-        const currentLiked = values[userIndex][5] || '';
-        const currentDisliked = values[userIndex][6] || '';
-        const likedArticles = currentLiked ? currentLiked.split(',') : [];
-        const dislikedArticles = currentDisliked ? currentDisliked.split(',') : [];
-
-        // Remove from both lists
-        const filteredLiked = likedArticles.filter(url => url !== articleUrl);
-        const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
-
-        sheet.getRange(userIndex + 1, 6).setValue(filteredLiked.join(','));
-        sheet.getRange(userIndex + 1, 7).setValue(filteredDisliked.join(','));
-        result = {success: true};
-      }
+      result = removeRatingForEmail(email, articleUrl);
 
     } else if (action === 'getAllUsers') {
       result = getAllUsers(e.parameter.email);

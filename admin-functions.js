@@ -35,27 +35,45 @@ function hideSection(type) {
 
 // Copy code to clipboard
 function copyCode(elementId) {
-    const code = document.getElementById(elementId).textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.classList.remove('copied');
-        }, 2000);
-    }).catch(err => {
-        alert('Failed to copy code. Please copy manually.');
-    });
+    const codeEl = document.getElementById(elementId);
+    if (!codeEl) return;
+    const code = codeEl.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = event && event.target;
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }
+        }).catch(err => {
+            alert('Failed to copy code. Please copy manually.');
+        });
+    } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            alert('Copied to clipboard');
+        } catch (e) {
+            alert('Failed to copy code. Please copy manually.');
+        }
+        document.body.removeChild(textarea);
+    }
 }
 
-// Generate Article HTML
+// Generate Article HTML (improved: preserves paragraphs and stores generated HTML for download)
 const articleForm = document.getElementById('articleForm');
 if (articleForm) {
     articleForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const title = document.getElementById('articleTitle').value;
         const category = document.getElementById('articleCategory').value;
         const author = document.getElementById('articleAuthor').value;
@@ -63,7 +81,11 @@ if (articleForm) {
         const readTime = document.getElementById('articleReadTime').value;
         const citationsPage = document.getElementById('articleCitationsPage').value;
         const image = document.getElementById('articleImage').value;
+        const imageSource = document.getElementById('articleImageSource') ? document.getElementById('articleImageSource').value : '';
         const content = document.getElementById('articleContent').value;
+
+        const paragraphs = getParagraphs(content);
+        const paragraphsHTML = paragraphs.map(p => `            <p>${p}</p>`).join('\n\n');
 
         const html = `<!DOCTYPE html>
 <html lang="en">
@@ -71,13 +93,21 @@ if (articleForm) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="${title} - The YUNity Project">
-    <title>${title} - The YUNity Project</title>
+    <meta name="description" content="${title}">
+    <meta property="og:title" content="${title} | TheYUNityProject">
+    <meta property="og:description" content="${title}">
+    <title>${title} | TheYUNityProject</title>
     <link rel="stylesheet" href="enhanced-style.css">
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2M32LXLLW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);} 
+  gtag('js', new Date());
+  gtag('config', 'G-Z2M32LXLLW');
+</script>
 <body>
-
-    <!-- Enhanced Header -->
     <div class="header-container">
         <div class="header-pattern"></div>
         <div class="header-text">
@@ -86,14 +116,13 @@ if (articleForm) {
         </div>
     </div>
 
-    <!-- Sticky Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="domestic.html">US Domestic</a></li>
-                <li><a href="foreign.html">US Foreign Policy</a></li>
+                <li><a href="foreign.html">US Foreign News</a></li>
                 <div class="dropdown">
                     <button class="dropbtn">Local ▾</button>
                     <div class="dropdown-content">
@@ -107,66 +136,56 @@ if (articleForm) {
                 <li><a href="AboutUs.html">About Us</a></li>
             </ul>
             <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search articles..." aria-label="Search">
+                <input type="text" class="search-box" placeholder="Search..." aria-label="Search">
             </div>
         </div>
     </nav>
 
-    <!-- Article Content -->
-    <div class="article-page">
+    <article class="article-page">
         <header class="article-header">
             <h1 class="article-page-title">${title}</h1>
-            <p class="article-author">By ${author}</p>
-            <p class="article-meta">${date} • ${readTime}</p>
+            <p class="article-author">By: ${author}</p>
+            <div class="article-meta">
+                <span>📅 ${date}</span>
+                <span>⏱️ ${readTime}</span>
+                <span>📁 ${category}</span>
+            </div>
         </header>
 
-        <div class="article-featured-image" style="background-image: url('${image}');"></div>
+        <div class="article-featured-image ${image}"></div>
+        <p class="image-credit">${imageSource}</p>
 
         <div class="article-body">
-            ${content}
+${paragraphsHTML}
         </div>
 
-        <!-- Citations Link -->
-        <div class="article-citations">
-            <a href="${citationsPage}">Works Cited</a>
+        <!-- Social Share Buttons -->
+        <div class="share-container">
+            <a href="#" class="share-btn">🐦 Twitter</a>
+            <a href="#" class="share-btn">📸 Instagram</a>
+            <a href="#" class="share-btn">🔗 Copy Link</a>
         </div>
 
-        <!-- Social Share -->
-        <div class="social-share">
-            <button class="share-btn" onclick="shareArticle('twitter')">Share on Twitter</button>
-            <button class="share-btn" onclick="shareArticle('facebook')">Share on Facebook</button>
-            <button class="share-btn" onclick="shareArticle('linkedin')">Share on LinkedIn</button>
-        </div>
-    </div>
+        <footer class="article-citations">
+            <a href="${citationsPage}">View Citations</a>
+        </footer>
+    </article>
 
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
     <script src="enhanced-script.js"></script>
-    <script>
-        function shareArticle(platform) {
-            const url = window.location.href;
-            const title = document.querySelector('.article-page-title').textContent;
-            
-            let shareUrl;
-            switch(platform) {
-                case 'twitter':
-                    shareUrl = \`https://twitter.com/intent/tweet?url=\${encodeURIComponent(url)}&text=\${encodeURIComponent(title)}\`;
-                    break;
-                case 'facebook':
-                    shareUrl = \`https://www.facebook.com/sharer/sharer.php?u=\${encodeURIComponent(url)}\`;
-                    break;
-                case 'linkedin':
-                    shareUrl = \`https://www.linkedin.com/sharing/share-offsite/?url=\${encodeURIComponent(url)}\`;
-                    break;
-            }
-            window.open(shareUrl, '_blank', 'width=600,height=400');
-        }
-    </script>
 </body>
 </html>`;
 
-        document.getElementById('articleCode').textContent = html;
-        document.getElementById('articleOutput').classList.add('active');
+        // Populate UI and make generated HTML available for download
+        const outputCode = document.getElementById('articleCode');
+        const outputBox = document.getElementById('articleOutput');
+        if (outputCode && outputBox) {
+            outputCode.textContent = html;
+            outputBox.classList.add('active');
+            window.currentArticleHTML = html;
+            outputBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     });
 }
 
@@ -344,7 +363,55 @@ ${citationsHTML}
         console.log('\n=== FINAL HTML ===');
         console.log(html);
 
+        window.currentCitationsHTML = html;
         document.getElementById('citationsCode').textContent = html;
         document.getElementById('citationsOutput').classList.add('active');
     });
+}
+
+// Helper: split text into paragraphs (preserve multi-paragraph input)
+function getParagraphs(text) {
+    return text
+        .trim()
+        .split(/\r?\n\s*\r?\n/)
+        .map(p => p.replace(/\r?\n/g, " ").trim())
+        .filter(p => p.length > 0);
+}
+
+// Download generated article HTML (uses window.currentArticleHTML)
+function downloadArticle() {
+    const filename = prompt('Enter filename for the article (without .html):', 'article');
+    if (!filename) return;
+    if (!window.currentArticleHTML) {
+        alert('Please generate the article first!');
+        return;
+    }
+    const blob = new Blob([window.currentArticleHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename.endsWith('.html') ? filename : filename + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Download generated citations page HTML (uses window.currentCitationsHTML)
+function downloadCitations() {
+    const filename = prompt('Enter filename for the citations page (without .html):', 'citations');
+    if (!filename) return;
+    if (!window.currentCitationsHTML) {
+        alert('Please generate the citations first!');
+        return;
+    }
+    const blob = new Blob([window.currentCitationsHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename.endsWith('.html') ? filename : filename + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }

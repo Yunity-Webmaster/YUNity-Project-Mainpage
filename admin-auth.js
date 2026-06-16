@@ -627,20 +627,7 @@ if (logoutLink) {
     });
 }
 
-// Show notification function
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'custom-notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
+// (notification function defined later; avoid duplicate definition)
 
 // Check if user is on admin page and not logged in as admin
 if (window.location.pathname.includes('admin.html')) {
