@@ -230,6 +230,37 @@ img {
     color: rgba(255,255,255,0.7);
 }
 
+/* Admin login button styling */
+.admin-login-btn,
+.admin-login-li a.admin-login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #17344e;
+    color: #cba230;
+    border-radius: 8px;
+    border: 2px solid rgba(23,52,78,0.15);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+}
+
+.admin-login-btn:hover,
+.admin-login-li a.admin-login-btn:hover {
+    background: #142a40;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Adjust placement on small screens: hide the inline button and rely on menu link */
+@media (max-width: 768px) {
+    .admin-login-btn { display: none; }
+    .admin-login-li { display: list-item; }
+}
+
+
 /* Search Results Dropdown */
 .search-results {
     position: absolute;

@@ -771,3 +771,100 @@ function showNotification(message) {
         notification.style.opacity = '0';
     }, 3000);
 }
+
+// Ensure login modal and admin login button exist, then wire UI handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Inject modal HTML if missing
+    if (!document.getElementById('loginModal')) {
+        const modalHtml = `
+        <div id="loginModal" class="login-modal" style="display:none;">
+            <div class="login-modal-content">
+                <span class="login-close">&times;</span>
+                <h2 id="modalTitle">Admin Login</h2>
+                <div class="auth-toggle">
+                    <button id="loginTab" class="auth-tab active">Login</button>
+                    <button id="registerTab" class="auth-tab">Create Account</button>
+                </div>
+                <form id="loginForm">
+                    <input type="email" id="username" placeholder="Email" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" style="display: none;">
+                    <button type="submit" id="submitBtn">Login</button>
+                </form>
+                <p id="loginError" class="login-error"></p>
+            </div>
+        </div>`;
+        const div = document.createElement('div');
+        div.innerHTML = modalHtml;
+        document.body.appendChild(div.firstElementChild);
+    }
+
+    // Inject Admin Login button into nav if missing (poll until nav is available)
+    if (!document.getElementById('adminLoginBtn')) {
+        (function waitForNav(attempt) {
+            const navContainer = document.querySelector('.nav-container') || document.querySelector('nav');
+            if (navContainer) {
+                    // Prefer placing inside the main nav links for consistent styling
+                    const navLinks = navContainer.querySelector('#navLinks, .nav-links');
+                    const search = navContainer.querySelector('.search-container');
+                    if (navLinks) {
+                        const li = document.createElement('li');
+                        li.id = 'adminLoginLi';
+                        li.className = 'nav-item admin-login-li';
+                        li.innerHTML = `<a href="#" id="adminLoginBtn" class="admin-login-btn">Admin Login</a>`;
+                        navLinks.appendChild(li);
+                    } else {
+                        const btn = document.createElement('button');
+                        btn.id = 'adminLoginBtn';
+                        btn.className = 'admin-login-btn';
+                        btn.textContent = 'Admin Login';
+                        btn.style.cssText = 'margin-left:12px;padding:6px 10px;background:#17344e;color:#cba230;border-radius:6px;border:none;cursor:pointer;font-weight:600;';
+                        if (search) search.parentNode.insertBefore(btn, search.nextSibling);
+                        else navContainer.appendChild(btn);
+                    }
+                // Update UI now that nav exists
+                try { updateLoginUI(); } catch (e) { /* ignore */ }
+                return;
+            }
+            if (attempt < 10) {
+                setTimeout(() => waitForNav(attempt + 1), 250);
+            }
+        })(0);
+    }
+
+    // Wire up adminLoginBtn to show modal
+    const adminLoginBtnEl = document.getElementById('adminLoginBtn');
+    if (adminLoginBtnEl) {
+        adminLoginBtnEl.addEventListener('click', function(e) {
+            e.preventDefault();
+            authMode = 'login';
+            updateModalUI();
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+        });
+    }
+
+    // Re-bind modal controls (in case they were added after script ran)
+    // Tabs
+    const loginTabEl = document.getElementById('loginTab');
+    const registerTabEl = document.getElementById('registerTab');
+    if (loginTabEl) loginTabEl.addEventListener('click', function() { authMode = 'login'; updateModalUI(); const err = document.getElementById('loginError'); if (err) err.textContent = ''; });
+    if (registerTabEl) registerTabEl.addEventListener('click', function() { authMode = 'register'; updateModalUI(); const err = document.getElementById('loginError'); if (err) err.textContent = ''; });
+
+    // Close control
+    const loginCloseEl = document.querySelector('.login-close');
+    if (loginCloseEl) loginCloseEl.addEventListener('click', function() { const modal = document.getElementById('loginModal'); if (modal) modal.style.display = 'none'; const err = document.getElementById('loginError'); if (err) { err.textContent=''; err.style.color='#ff6b6b'; } const form = document.getElementById('loginForm'); if (form) form.reset(); authMode = 'login'; updateModalUI(); });
+
+    // Close when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('loginModal');
+        if (modal && event.target === modal) {
+            modal.style.display = 'none';
+            const err = document.getElementById('loginError'); if (err) { err.textContent=''; err.style.color='#ff6b6b'; }
+            const form = document.getElementById('loginForm'); if (form) form.reset(); authMode = 'login'; updateModalUI();
+        }
+    });
+
+    // Ensure updateLoginUI runs after DOM ready
+    updateLoginUI();
+});
