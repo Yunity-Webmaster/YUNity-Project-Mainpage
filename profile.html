@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - Yung Politics</title>
-    <link rel="stylesheet" href="enhanced-style.css">
-    <script src="admin-auth.js" defer></script>
+    <link rel="stylesheet" href="style/enhanced-style.css">
+    <script src="javascript/admin-auth.js" defer></script>
 </head>
 <body>
 
-    <!-- Enhanced Header -->
     <div class="header-container">
         <div class="header-pattern"></div>
         <div class="header-text">
@@ -18,35 +17,7 @@
         </div>
     </div>
 
-    <!-- Sticky Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="domestic.html">US Domestic</a></li>
-                <li><a href="foreign.html">US Foreign News</a></li>
-                    <!-- Dropdown section -->
-                <div class="dropdown">
-                    <button class="dropbtn">Local ▾</button>
-                    <div class="dropdown-content">
-                        <li><a href="Local.html">Local News</a></li>
-                        <li><a href="Election.html">2025 Election</a></li>
-                    </div>
-                </div>
-                <li><a href="international.html">International</a></li>
-                <li><a href="Emergency.html">Emergency Statements</a></li>
-                <li><a href="oped.html">Opinion</a></li>
-                <li><a href="AboutUs.html">About Us</a></li>
-                <li id="adminPageLink" style="display:none;"><a href="admin.html">Admin</a></li>
-                <li id="profileLink" style="display:none;"><a href="profile.html">Profile</a></li>
-                <li><a href="#" id="adminLoginBtn">Login</a></li>
-            </ul>
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search articles..." aria-label="Search">
-            </div>
-        </div>
-    </nav>
+    <div id="nav-placeholder"></div>
 
     <!-- Login Modal -->
     <div id="loginModal" class="login-modal">
@@ -103,7 +74,7 @@
         </div>
     </footer>
 
-    <script src="enhanced-script.js"></script>
+    <script src="javascript/enhanced-script.js"></script>
     <script>
         // Article metadata for saved articles display
         const articlesData = {

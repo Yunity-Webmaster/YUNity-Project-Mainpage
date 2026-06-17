@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Redirect — YUNity Project</title>
-  <link rel="stylesheet" href="enhanced-style.css">
+  <link rel="stylesheet" href="style/enhanced-style.css">
   <meta http-equiv="refresh" content="3;url=https://script.google.com/macros/s/AKfycbxQtCPmuRAcvLMjUsWsaeF4DjtwoPz9rtM9JJLc-gGb2VwDwpZegnhN-VqvZxACcak/exec">
   <script>
     // Fallback JS redirect if meta refresh is blocked
@@ -14,11 +14,22 @@
   </script>
 </head>
 <body>
+  <div class="header-container">
+        <div class="header-pattern"></div>
+        <div class="header-text">
+            <h1>The YUNity Project</h1>
+            <p class="header-tagline">Veritas vos liberabit</p>
+        </div>
+    </div>
+
+    <div id="nav-placeholder"></div>
+
   <div style="max-width:780px;margin:48px auto;font-family:Arial,Helvetica,sans-serif;text-align:center;">
     <h1>Admin Dashboard Moved</h1>
     <p>The admin dashboard has been moved to a Google Apps Script web app for secure access.</p>
     <p>You will be redirected automatically. If not, <a href="https://script.google.com/macros/s/AKfycbxQtCPmuRAcvLMjUsWsaeF4DjtwoPz9rtM9JJLc-gGb2VwDwpZegnhN-VqvZxACcak/exec">click here to open the admin app</a>.</p>
     <p style="margin-top:18px;color:#666">If you are not recognized as an admin, contact the site owner.</p>
   </div>
+  <script src="javascript/nav.js"></script>
 </body>
 </html>

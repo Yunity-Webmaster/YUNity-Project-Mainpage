@@ -1,0 +1,908 @@
+// Admin Authentication System with Google Sheets Integration
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLRy6gYsWtohodTw94pFRA51mR13zcMepti1lmME-ZeufwnUj7iwkRXx6_e-96Lqkq/exec'; // Replace with your deployed web app URL
+
+// Check if Apps Script URL is configured
+function isAppsScriptConfigured() {
+    const result = APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE' && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    console.log('isAppsScriptConfigured check:', {
+        url: APPS_SCRIPT_URL,
+        exists: !!APPS_SCRIPT_URL,
+        notPlaceholder1: APPS_SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE',
+        notPlaceholder2: APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
+        result: result
+    });
+    return result;
+}
+
+// JSONP fallback for when fetch fails due to CSP restrictions
+function jsonpRequest(action, data) {
+    return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_callback_' + Math.random().toString(36).substr(2, 9);
+
+        // Create the URL with query parameters
+        const params = new URLSearchParams();
+        params.append('action', action);
+        params.append('callback', callbackName);
+
+        // Add data parameters
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
+
+        const url = `${APPS_SCRIPT_URL}?${params.toString()}`;
+
+        // Create script element
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+
+        // Set up callback function
+        window[callbackName] = function(response) {
+            // Clean up
+            delete window[callbackName];
+            document.head.removeChild(script);
+
+            resolve(response);
+        };
+
+        // Handle errors
+        script.onerror = function() {
+            delete window[callbackName];
+            if (document.head.contains(script)) {
+                document.head.removeChild(script);
+            }
+            reject(new Error('JSONP request failed'));
+        };
+
+        // Add timeout
+        setTimeout(() => {
+            if (window[callbackName]) {
+                delete window[callbackName];
+                if (document.head.contains(script)) {
+                    document.head.removeChild(script);
+                }
+                reject(new Error('JSONP request timeout'));
+            }
+        }, 10000); // 10 second timeout
+
+        // Add script to document
+        document.head.appendChild(script);
+    });
+}
+
+// Hash password with salt using SHA-256
+async function hashPassword(password, salt) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password + salt);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+// Generate a random salt
+function generateSalt() {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// Register a new user via Google Sheets
+async function registerUser(email, password, role = 'user') {
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        const salt = generateSalt();
+        const hash = await hashPassword(password, salt);
+
+        console.log('Attempting to register user:', email);
+
+        // Use JSONP directly to avoid CORS issues
+        console.log('Using JSONP for registration');
+        const result = await jsonpRequest('register', {
+            email: email,
+            salt: salt,
+            hash: hash,
+            role: role
+        });
+        console.log('Registration result:', result);
+        return result;
+    } catch (error) {
+        console.error('Registration failed:', error.message);
+        return {
+            success: false,
+            message: 'Registration failed. Please try again.'
+        };
+    }
+}
+
+// Login user via Google Sheets
+async function loginUser(email, password) {
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to login user:', email);
+
+        // Use JSONP directly to avoid CORS issues
+        console.log('Using JSONP for login');
+        const result = await jsonpRequest('login', {
+            email: email,
+            password: password
+        });
+        console.log('Login result:', result);
+
+        if (result.success) {
+            // Store user preferences in sessionStorage
+            sessionStorage.setItem('user_saved_articles', result.savedArticles || '');
+            sessionStorage.setItem('user_liked_articles', result.likedArticles || '');
+            sessionStorage.setItem('user_disliked_articles', result.dislikedArticles || '');
+        }
+        return result;
+    } catch (error) {
+        console.error('Login failed:', error.message);
+        return {
+            success: false,
+            message: 'Login failed. Please try again.'
+        };
+    }
+}
+
+// Save article for user
+async function saveArticle(articleUrl) {
+    const email = sessionStorage.getItem('user_email');
+    if (!email) return { success: false, message: 'Not logged in' };
+
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to save article:', articleUrl);
+
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('saveArticle', {
+            email: email,
+            articleUrl: articleUrl
+        });
+        console.log('Save article result:', result);
+
+        if (result.success) {
+            // Update local session storage
+            const saved = sessionStorage.getItem('user_saved_articles') || '';
+            const savedArticles = saved ? saved.split(',') : [];
+            if (!savedArticles.includes(articleUrl)) {
+                savedArticles.push(articleUrl);
+                sessionStorage.setItem('user_saved_articles', savedArticles.join(','));
+            }
+        }
+        return result;
+    } catch (error) {
+        console.error('Save article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
+    }
+}
+
+// Unsave article for user
+async function unsaveArticle(articleUrl) {
+    const email = sessionStorage.getItem('user_email');
+    if (!email) return { success: false, message: 'Not logged in' };
+
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to unsave article:', articleUrl);
+
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('unsaveArticle', {
+            email: email,
+            articleUrl: articleUrl
+        });
+        console.log('Unsave article result:', result);
+
+        if (result.success) {
+            // Update local session storage
+            const saved = sessionStorage.getItem('user_saved_articles') || '';
+            const savedArticles = saved ? saved.split(',') : [];
+            const filteredArticles = savedArticles.filter(url => url !== articleUrl);
+            sessionStorage.setItem('user_saved_articles', filteredArticles.join(','));
+        }
+        return result;
+    } catch (error) {
+        console.error('Unsave article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
+    }
+}
+
+// Like article
+async function likeArticle(articleUrl) {
+    const email = sessionStorage.getItem('user_email');
+    if (!email) return { success: false, message: 'Not logged in' };
+
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to like article:', articleUrl);
+
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('likeArticle', {
+            email: email,
+            articleUrl: articleUrl
+        });
+        console.log('Like article result:', result);
+
+        if (result.success) {
+            // Update local session storage
+            const liked = sessionStorage.getItem('user_liked_articles') || '';
+            const disliked = sessionStorage.getItem('user_disliked_articles') || '';
+
+            const likedArticles = liked ? liked.split(',') : [];
+            const dislikedArticles = disliked ? disliked.split(',') : [];
+
+            // Remove from disliked
+            const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
+            // Add to liked
+            if (!likedArticles.includes(articleUrl)) {
+                likedArticles.push(articleUrl);
+            }
+
+            sessionStorage.setItem('user_liked_articles', likedArticles.join(','));
+            sessionStorage.setItem('user_disliked_articles', filteredDisliked.join(','));
+        }
+        return result;
+    } catch (error) {
+        console.error('Like article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
+    }
+}
+
+// Dislike article
+async function dislikeArticle(articleUrl) {
+    const email = sessionStorage.getItem('user_email');
+    if (!email) return { success: false, message: 'Not logged in' };
+
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to dislike article:', articleUrl);
+
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('dislikeArticle', {
+            email: email,
+            articleUrl: articleUrl
+        });
+        console.log('Dislike article result:', result);
+
+        if (result.success) {
+            // Update local session storage
+            const liked = sessionStorage.getItem('user_liked_articles') || '';
+            const disliked = sessionStorage.getItem('user_disliked_articles') || '';
+
+            const likedArticles = liked ? liked.split(',') : [];
+            const dislikedArticles = disliked ? disliked.split(',') : [];
+
+            // Remove from liked
+            const filteredLiked = likedArticles.filter(url => url !== articleUrl);
+            // Add to disliked
+            if (!dislikedArticles.includes(articleUrl)) {
+                dislikedArticles.push(articleUrl);
+            }
+
+            sessionStorage.setItem('user_liked_articles', filteredLiked.join(','));
+            sessionStorage.setItem('user_disliked_articles', dislikedArticles.join(','));
+        }
+        return result;
+    } catch (error) {
+        console.error('Dislike article error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
+    }
+}
+
+// Remove rating from article
+async function removeRating(articleUrl) {
+    const email = sessionStorage.getItem('user_email');
+    if (!email) return { success: false, message: 'Not logged in' };
+
+    if (!isAppsScriptConfigured()) {
+        return {
+            success: false,
+            message: 'Google Apps Script not configured. Please contact administrator.'
+        };
+    }
+
+    try {
+        console.log('Attempting to remove rating from article:', articleUrl);
+
+        // Use JSONP to avoid CORS issues
+        const result = await jsonpRequest('removeRating', {
+            email: email,
+            articleUrl: articleUrl
+        });
+        console.log('Remove rating result:', result);
+
+        if (result.success) {
+            // Update local session storage
+            const liked = sessionStorage.getItem('user_liked_articles') || '';
+            const disliked = sessionStorage.getItem('user_disliked_articles') || '';
+
+            const likedArticles = liked ? liked.split(',') : [];
+            const dislikedArticles = disliked ? disliked.split(',') : [];
+
+            // Remove from both
+            const filteredLiked = likedArticles.filter(url => url !== articleUrl);
+            const filteredDisliked = dislikedArticles.filter(url => url !== articleUrl);
+
+            sessionStorage.setItem('user_liked_articles', filteredLiked.join(','));
+            sessionStorage.setItem('user_disliked_articles', filteredDisliked.join(','));
+        }
+        return result;
+    } catch (error) {
+        console.error('Remove rating error:', error);
+        return {
+            success: false,
+            message: `Network error: ${error.message}. Please check your internet connection and try again.`
+        };
+    }
+}
+
+// Get user article preferences
+function getUserPreferences() {
+    return {
+        savedArticles: (sessionStorage.getItem('user_saved_articles') || '').split(',').filter(url => url),
+        likedArticles: (sessionStorage.getItem('user_liked_articles') || '').split(',').filter(url => url),
+        dislikedArticles: (sessionStorage.getItem('user_disliked_articles') || '').split(',').filter(url => url)
+    };
+}
+
+// Check if user is logged in and get user role
+function checkAuth() {
+    const user = sessionStorage.getItem('user_logged_in');
+    const role = sessionStorage.getItem('user_role');
+    return { loggedIn: user === 'true', role: role || 'user' };
+}
+
+// Update UI based on login status and user role
+function updateLoginUI() {
+    const auth = checkAuth();
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminPageLink = document.getElementById('adminPageLink');
+    const profileLink = document.getElementById('profileLink');
+
+    if (auth.loggedIn) {
+        // User is logged in
+        if (adminLoginBtn) adminLoginBtn.style.display = 'none';
+
+        if (auth.role === 'admin') {
+            // Show admin link, hide profile link
+            if (adminPageLink) adminPageLink.style.display = 'block';
+            if (profileLink) profileLink.style.display = 'none';
+        } else {
+            // Show profile link, hide admin link
+            if (adminPageLink) adminPageLink.style.display = 'none';
+            if (profileLink) profileLink.style.display = 'block';
+        }
+    } else {
+        // User is logged out
+        if (adminLoginBtn) adminLoginBtn.style.display = 'block';
+        if (adminPageLink) adminPageLink.style.display = 'none';
+        if (profileLink) profileLink.style.display = 'none';
+    }
+}
+
+// Auth mode: 'login' or 'register'
+let authMode = 'login';
+
+// Update modal UI based on auth mode
+function updateModalUI() {
+    const modalTitle = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const loginTab = document.getElementById('loginTab');
+    const registerTab = document.getElementById('registerTab');
+
+    if (authMode === 'login') {
+        if (modalTitle) modalTitle.textContent = 'Login';
+        if (submitBtn) submitBtn.textContent = 'Login';
+        if (confirmPassword) {
+            confirmPassword.style.display = 'none';
+            confirmPassword.required = false;
+        }
+        if (loginTab) loginTab.classList.add('active');
+        if (registerTab) registerTab.classList.remove('active');
+    } else {
+        if (modalTitle) modalTitle.textContent = 'Create Account';
+        if (submitBtn) submitBtn.textContent = 'Create Account';
+        if (confirmPassword) {
+            confirmPassword.style.display = 'block';
+            confirmPassword.required = true;
+        }
+        if (loginTab) loginTab.classList.remove('active');
+        if (registerTab) registerTab.classList.add('active');
+    }
+}
+
+// Wire up all DOM-dependent auth UI.
+// Called after nav:ready so the Login button injected by nav.html is in the DOM.
+function initAuthUI() {
+    // Login button (lives inside the injected nav)
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    if (adminLoginBtn) {
+        adminLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            authMode = 'login';
+            updateModalUI();
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+        });
+    }
+
+    // Tab switches (live in the modal, always present)
+    const loginTab = document.getElementById('loginTab');
+    const registerTab = document.getElementById('registerTab');
+
+    if (loginTab) {
+        loginTab.addEventListener('click', function() {
+            authMode = 'login';
+            updateModalUI();
+            const err = document.getElementById('loginError');
+            if (err) err.textContent = '';
+        });
+    }
+
+    if (registerTab) {
+        registerTab.addEventListener('click', function() {
+            authMode = 'register';
+            updateModalUI();
+            const err = document.getElementById('loginError');
+            if (err) err.textContent = '';
+        });
+    }
+
+    // Close modal X button
+    const loginClose = document.querySelector('.login-close');
+    if (loginClose) {
+        loginClose.addEventListener('click', function() {
+            closeModal();
+        });
+    }
+
+    // Close modal on outside click
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('loginModal');
+        if (event.target === modal) closeModal();
+    });
+
+    // Login / register form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Disable button to prevent double-submit
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Please wait…'; }
+
+            if (authMode === 'login') {
+                const result = await loginUser(email, password);
+
+                if (result.success) {
+                    sessionStorage.setItem('user_logged_in', 'true');
+                    sessionStorage.setItem('user_role', result.role || 'user');
+                    sessionStorage.setItem('user_email', email);
+                    closeModal();
+                    updateLoginUI();
+                    window.location.href = result.role === 'admin' ? 'admin.html' : 'profile.html';
+                } else {
+                    if (submitBtn) { submitBtn.disabled = false; updateModalUI(); }
+                    showError(errorElement, result.message || 'Login failed. Please try again.');
+                }
+            } else {
+                // Registration
+                const confirmPasswordEl = document.getElementById('confirmPassword');
+                const confirmPassword = confirmPasswordEl ? confirmPasswordEl.value : '';
+
+                if (password !== confirmPassword) {
+                    if (submitBtn) { submitBtn.disabled = false; updateModalUI(); }
+                    showError(errorElement, 'Passwords do not match.');
+                    return;
+                }
+
+                const result = await registerUser(email, password);
+
+                if (result.success) {
+                    if (errorElement) {
+                        errorElement.textContent = 'Account created! You can now log in.';
+                        errorElement.style.color = '#4CAF50';
+                    }
+                    setTimeout(() => {
+                        authMode = 'login';
+                        updateModalUI();
+                        if (submitBtn) submitBtn.disabled = false;
+                        if (errorElement) { errorElement.textContent = ''; errorElement.style.color = '#ff6b6b'; }
+                    }, 2500);
+                } else {
+                    if (submitBtn) { submitBtn.disabled = false; updateModalUI(); }
+                    showError(errorElement, result.message || 'Registration failed. Please try again.');
+                }
+            }
+        });
+    }
+
+    // Logout button (present on profile.html and any page that has one)
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            sessionStorage.removeItem('user_logged_in');
+            sessionStorage.removeItem('user_role');
+            sessionStorage.removeItem('user_email');
+            sessionStorage.removeItem('user_saved_articles');
+            sessionStorage.removeItem('user_liked_articles');
+            sessionStorage.removeItem('user_disliked_articles');
+            updateLoginUI();
+            showNotification('Logged out successfully!');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+        });
+    }
+
+    // Reflect current login state in the (now-present) nav
+    updateLoginUI();
+}
+
+// Helper: show an error message that auto-clears
+function showError(el, message) {
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = '#ff6b6b';
+    setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+// Helper: reset and close the login modal
+function closeModal() {
+    const modal = document.getElementById('loginModal');
+    if (modal) modal.style.display = 'none';
+    const form = document.getElementById('loginForm');
+    if (form) form.reset();
+    const err = document.getElementById('loginError');
+    if (err) { err.textContent = ''; err.style.color = '#ff6b6b'; }
+    authMode = 'login';
+    updateModalUI();
+}
+
+// Page-level guards (run immediately — don't need the nav to be ready)
+if (window.location.pathname.includes('admin.html')) {
+    const auth = checkAuth();
+    if (!auth.loggedIn || auth.role !== 'admin') {
+        window.location.href = 'index.html';
+    }
+}
+
+if (window.location.pathname.includes('profile.html')) {
+    const auth = checkAuth();
+    if (!auth.loggedIn) {
+        window.location.href = 'index.html';
+    }
+}
+
+// Wait for nav.js to inject the nav HTML before wiring up UI
+document.addEventListener('nav:ready', initAuthUI, { once: true });
+
+// User Management Functions
+async function loadUsers() {
+    const userList = document.getElementById('userList');
+    if (!userList) return;
+
+    userList.innerHTML = '<p>Loading users...</p>';
+
+    try {
+        const response = await jsonpRequest('getAllUsers', { 
+            email: sessionStorage.getItem('user_email') // requesting admin email
+        });
+        if (response.success) {
+            displayUsers(response.users);
+        } else {
+            userList.innerHTML = '<p>Error loading users. Please try again.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+        userList.innerHTML = '<p>Error loading users. Please try again.</p>';
+    }
+}
+
+function displayUsers(users) {
+    const userList = document.getElementById('userList');
+    if (!userList) return;
+
+    if (!users || users.length === 0) {
+        userList.innerHTML = '<p>No users found.</p>';
+        return;
+    }
+
+    userList.innerHTML = users.map(user => `
+        <div class="user-item ${user.role === 'admin' ? 'admin' : ''}">
+            <div class="user-info">
+                <div class="user-email">${user.email}</div>
+                <div class="user-role">Role: ${user.role || 'user'}</div>
+            </div>
+            <div class="user-actions">
+                ${user.role !== 'admin' ?
+                    `<button class="btn-promote" onclick="promoteToAdmin('${user.email}')">Make Admin</button>` :
+                    `<button class="btn-demote" onclick="demoteFromAdmin('${user.email}')">Remove Admin</button>`
+                }
+            </div>
+        </div>
+    `).join('');
+}
+
+async function promoteToAdmin(email) {
+    if (!confirm(`Are you sure you want to promote ${email} to admin?`)) {
+        return;
+    }
+
+    try {
+        const response = await jsonpRequest('changeUserRole', { 
+            email: sessionStorage.getItem('user_email'), // requesting admin email
+            targetEmail: email, // user to promote
+            role: 'admin' 
+        });
+        if (response.success) {
+            showNotification('User promoted to admin successfully!');
+            loadUsers(); // Refresh the user list
+        } else {
+            showNotification('Error promoting user. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error promoting user:', error);
+        showNotification('Error promoting user. Please try again.');
+    }
+}
+
+async function demoteFromAdmin(email) {
+    if (!confirm(`Are you sure you want to remove admin privileges from ${email}?`)) {
+        return;
+    }
+
+    try {
+        const response = await jsonpRequest('changeUserRole', { 
+            email: sessionStorage.getItem('user_email'), // requesting admin email
+            targetEmail: email, // user to demote
+            role: 'user' 
+        });
+        if (response.success) {
+            showNotification('Admin privileges removed successfully!');
+            loadUsers(); // Refresh the user list
+        } else {
+            showNotification('Error removing admin privileges. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error demoting user:', error);
+        showNotification('Error removing admin privileges. Please try again.');
+    }
+}
+
+// Show notification function (if not already defined)
+function showNotification(message) {
+    // Create notification element if it doesn't exist
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #cba230;
+            color: #17344e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+    }
+
+    notification.textContent = message;
+    notification.style.opacity = '1';
+
+    setTimeout(() => {
+        notification.style.opacity = '0';
+    }, 3000);
+}
+
+// Initialize article save/like/dislike interactions site-wide.
+// Falls back to page-defined handlers if they exist (keeps backward compatibility).
+document.addEventListener('DOMContentLoaded', () => {
+    const articleUrl = window.currentArticleUrl || (window.location.pathname ? window.location.pathname.split('/').pop() : document.title || '');
+
+    const saveBtn = document.getElementById('saveBtn');
+    const likeBtn = document.getElementById('likeBtn');
+    const dislikeBtn = document.getElementById('dislikeBtn');
+
+    if (!saveBtn && !likeBtn && !dislikeBtn) return;
+
+    // Helper to refresh button visuals from session storage
+    function refreshButtonStates() {
+        const prefs = getUserPreferences();
+        if (saveBtn) {
+            if (prefs.savedArticles.includes(articleUrl)) {
+                saveBtn.classList.add('active');
+                const txt = saveBtn.querySelector('.btn-text'); if (txt) txt.textContent = 'Saved';
+            } else {
+                saveBtn.classList.remove('active');
+                const txt = saveBtn.querySelector('.btn-text'); if (txt) txt.textContent = 'Save';
+            }
+        }
+        if (likeBtn && dislikeBtn) {
+            if (prefs.likedArticles.includes(articleUrl)) {
+                likeBtn.classList.add('active'); dislikeBtn.classList.remove('active');
+            } else if (prefs.dislikedArticles.includes(articleUrl)) {
+                dislikeBtn.classList.add('active'); likeBtn.classList.remove('active');
+            } else {
+                likeBtn.classList.remove('active'); dislikeBtn.classList.remove('active');
+            }
+        }
+    }
+
+    // Generic handlers (used if page doesn't provide custom toggle functions)
+    async function genericToggleSave(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to save articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isSaved = prefs.savedArticles.includes(articleUrl);
+        try {
+            if (isSaved) {
+                const res = await unsaveArticle(articleUrl);
+                if (res && res.success) {
+                    showNotification('Article removed from saved!', 'success');
+                }
+            } else {
+                const res = await saveArticle(articleUrl);
+                if (res && res.success) {
+                    showNotification('Article saved!', 'success');
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating save status. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    async function genericToggleLike(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to like articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isLiked = prefs.likedArticles.includes(articleUrl);
+        try {
+            if (isLiked) {
+                const res = await removeRating(articleUrl);
+                if (res && res.success) showNotification('Like removed!', 'success');
+            } else {
+                const res = await likeArticle(articleUrl);
+                if (res && res.success) showNotification('Article liked!', 'success');
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating rating. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    async function genericToggleDislike(e) {
+        e && e.preventDefault();
+        if (!checkAuth().loggedIn) {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.style.display = 'block';
+            else alert('Please log in to dislike articles.');
+            return;
+        }
+        const prefs = getUserPreferences();
+        const isDisliked = prefs.dislikedArticles.includes(articleUrl);
+        try {
+            if (isDisliked) {
+                const res = await removeRating(articleUrl);
+                if (res && res.success) showNotification('Dislike removed!', 'success');
+            } else {
+                const res = await dislikeArticle(articleUrl);
+                if (res && res.success) showNotification('Article disliked!', 'success');
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification('Error updating rating. Please try again.', 'error');
+        } finally {
+            refreshButtonStates();
+        }
+    }
+
+    // Wire buttons only if not already wired by page scripts
+    if (saveBtn && !saveBtn.dataset.wired) {
+        if (typeof window.toggleSave === 'function') saveBtn.addEventListener('click', window.toggleSave);
+        else saveBtn.addEventListener('click', genericToggleSave);
+        saveBtn.dataset.wired = '1';
+    }
+    if (likeBtn && !likeBtn.dataset.wired) {
+        if (typeof window.toggleLike === 'function') likeBtn.addEventListener('click', window.toggleLike);
+        else likeBtn.addEventListener('click', genericToggleLike);
+        likeBtn.dataset.wired = '1';
+    }
+    if (dislikeBtn && !dislikeBtn.dataset.wired) {
+        if (typeof window.toggleDislike === 'function') dislikeBtn.addEventListener('click', window.toggleDislike);
+        else dislikeBtn.addEventListener('click', genericToggleDislike);
+        dislikeBtn.dataset.wired = '1';
+    }
+
+    // Keyboard accessibility
+    [saveBtn, likeBtn, dislikeBtn].forEach(btn => {
+        if (!btn) return;
+        if (!btn.dataset.keywired) {
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
+            btn.dataset.keywired = '1';
+        }
+    });
+
+    // Refresh UI on auth changes
+    refreshButtonStates();
+});

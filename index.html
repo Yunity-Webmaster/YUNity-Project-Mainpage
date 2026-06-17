@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="The YUNity Project - A youth-led organization dedicated to providing nonpartisan, fact-driven research and news to communities across America.">
     <title>The YUNity Project - Nonpartisan News & Research</title>
-    <link rel="stylesheet" href="enhanced-style.css">
+    <link rel="stylesheet" href="style/enhanced-style.css">
 </head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2M32LXLLW"></script>
 <script>
@@ -58,25 +58,43 @@
             <h2 class="section-title">Latest Articles</h2>
             
             <div class="articles-grid">
-                                <article class="article-card">
-                    <a href="Iran.html" class="card-link">
-                        <div class="article-image IranImage">
-                            <span class="article-category">US Foreign News</span>
+                
+                <article class="article-card">
+                    <a href="articles/America250.html" class="card-link">
+                        <div class="article-image America250">
+                            <span class="article-category">Opinion</span>
                         </div>
                         <div class="article-content">
                             <div class="article-meta">
-                                <span>📅 March 2, 2026</span>
+                                <span>📅 June 16, 2026</span>
                                 <span>⏱️ 3 min read</span>
                             </div>
-                            <h3 class="article-title">US Military Operation in Iran: Everything You Need To Know</h3>
-                            <p class="article-excerpt">The United States, in coordination with Israel, launched a major military operation against Iran, resulting in the death of the country’s Supreme Leader and raising uncertainty about its future leadership. Iran quickly retaliated with missile and drone strikes across the region, intensifying fears of a broader conflict in the Middle East.</p>
+                            <h3 class="article-title">OPINION: America’s 250th Birthday Should Strive for Unity, Not Division</h3>
+                            <p class="article-excerpt">A call to remember the creed in which America was founded: a more perfect union.</p>
                             <span class="read-more">Read More →</span>
                         </div>
                     </a>
                 </article>
+
+                <article class="article-card">
+                    <a href="articles/Iran.html" class="card-link">
+                        <div class="article-image IranImage">
+                            <span class="article-category">US Foreign News</span>
+                        </div>
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span>📅 March 2, 2026</span>
+                                    <span>⏱️ 3 min read</span>
+                                </div>
+                                <h3 class="article-title">US Military Operation in Iran: Everything You Need To Know</h3>
+                                <p class="article-excerpt">A concise overview of recent US military action and its regional implications.</p>
+                                <span class="read-more">Read More →</span>
+                            </div>
+                    </a>
+                </article>
                 
                 <article class="article-card">
-                    <a href="Trump.html" class="card-link">
+                    <a href="articles/Trump.html" class="card-link">
                         <div class="article-image TrumpImage">
                             <span class="article-category">US Domestic</span>
                         </div>
@@ -93,7 +111,7 @@
                 </article>
 
                 <article class="article-card">
-                    <a href="Venezuela.html" class="card-link">
+                    <a href="articles/Venezuela.html" class="card-link">
                         <div class="article-image VenezuelaImage">
                             <span class="article-category">US Foreign News</span>
                         </div>
@@ -110,7 +128,7 @@
                 </article>
 
                 <article class="article-card">
-                    <a href="BushInstitute.html" class="card-link">
+                    <a href="articles/BushInstitute.html" class="card-link">
                         <div class="article-image BushInstituteImage">
                             <span class="article-category">US Domestic</span>
                         </div>
@@ -127,7 +145,7 @@
                 </article>
 
                 <article class="article-card">
-                    <a href="TexasPolitics.html" class="card-link">
+                    <a href="articles/TexasPolitics.html" class="card-link">
                         <div class="article-image TexasImage">
                             <span class="article-category">US Local</span>
                         </div>
@@ -143,23 +161,9 @@
                     </a>
                 </article>
 
-                <article class="article-card">
-                    <a href="ChristianPersecution.html" class="card-link">
-                        <div class="article-image ChristianImage">
-                            <span class="article-category">International</span>
-                        </div>
-                        <div class="article-content">
-                            <div class="article-meta">
-                                <span>📅 December 15, 2025</span>
-                                <span>⏱️ 3 min read</span>
-                            </div>
-                            <h3 class="article-title">Christian Persecution in Nigeria: Deliberate or Coincidental Harm?</h3>
-                            <p class="article-excerpt">Examining whether Christian Nigerians are being persecuted, or if it is non-religious violence.</p>
-                            <span class="read-more">Read More →</span>
-                        </div>
-                    </a>
-                </article>
+            </div>
 
+        <div class="welcome-and-newsletter">
         <section class="welcome">
             <p>"In a democracy, truth and education stand as pillars. When these pillars are threatened, our democracy is threatened. In a society where extremism has become mainstream, people must be able to realize that a difference in opinion is inevitable and must be well-managed. The founders of the United States framed our government with civil discourse at its core. The greatest and brightest moments in our nation's history were those marked by compromise. A willingness to have an open mind is the essential ingredient in the great American experiment. The YUNity Project is more than just another organization; it's a mission that anybody and everybody can join in this pursuit for truth. I hope that even in the darkest of times, we can realize the YUNity Project's motto: veritas vos liberabit, the truth shall set you free."</p>
             <h3>H. Yun</h3>
@@ -175,13 +179,14 @@
                 <button type="submit" class="newsletter-btn">Subscribe</button>
             </form>
         </section>
+        </div>
     </div>
 
     <div class="back-to-top" id="backToTop" aria-label="Back to top">↑</div>
 
-    <script src="nav.js"></script>
-    <script src="articles-loader.js"></script>
-    <script src="enhanced-script.js"></script>
-    <script src="admin-auth.js"></script>
+    <script src="javascript/nav.js"></script>
+    <script src="javascript/articles-loader.js"></script>
+    <script src="javascript/enhanced-script.js"></script>
+    <script src="javascript/admin-auth.js"></script>
 </body>
 </html>
