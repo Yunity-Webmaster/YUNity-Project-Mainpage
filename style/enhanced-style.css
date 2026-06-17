@@ -793,3 +793,199 @@ a[href*="flickr"] {
     border: 2px solid rgba(23,52,78,0.3);
     border-radius: 30px;
 }
+
+/* =====================================
+   LOGIN / REGISTER MODAL
+   ===================================== */
+
+/* Overlay */
+.login-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.2s ease;
+}
+
+/* Show state — JS sets display:block; we override to flex so it centres */
+.login-modal[style*="display: block"],
+.login-modal[style*="display:block"] {
+    display: flex !important;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Card */
+.login-modal-content {
+    position: relative;
+    background: linear-gradient(160deg, #1e3f5c 0%, #17344e 100%);
+    border: 1px solid rgba(203, 162, 48, 0.35);
+    border-radius: 16px;
+    padding: 40px 36px 32px;
+    width: min(420px, 92vw);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    animation: cardSlideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardSlideUp {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Close button */
+.login-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 22px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+}
+.login-close:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Title */
+.login-modal-content h2 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Tab toggle row */
+.auth-toggle {
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(203, 162, 48, 0.3);
+    margin-bottom: 24px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    transition: background 0.2s, color 0.2s;
+}
+.auth-tab.active {
+    background: #cba230;
+    color: #17344e;
+}
+.auth-tab:not(.active):hover {
+    background: rgba(203, 162, 48, 0.12);
+    color: #cba230;
+}
+
+/* Form inputs */
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#loginForm input[type="email"],
+#loginForm input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: "Calibri", sans-serif;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+#loginForm input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+#loginForm input:focus {
+    border-color: #cba230;
+    background: rgba(203, 162, 48, 0.07);
+}
+
+/* Submit button */
+#submitBtn {
+    margin-top: 4px;
+    padding: 13px;
+    background: #cba230;
+    color: #17344e;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, opacity 0.2s;
+}
+#submitBtn:hover:not(:disabled) {
+    background: #d4aa38;
+    transform: translateY(-1px);
+}
+#submitBtn:active:not(:disabled) {
+    transform: translateY(0);
+}
+#submitBtn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Error / success message */
+.login-error {
+    min-height: 20px;
+    margin-top: 10px;
+    font-size: 13px;
+    text-align: center;
+    color: #ff6b6b;
+    transition: color 0.2s;
+}
+
+/* Divider line above the gold accent at modal bottom */
+.login-modal-content::after {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #cba230, transparent);
+    border-radius: 0 0 16px 16px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* =====================================
+   RESPONSIVE
+   ===================================== */
+@media (max-width: 480px) {
+    .login-modal-content {
+        padding: 32px 22px 28px;
+    }
+    .login-modal-content h2 {
+        font-size: 22px;
+    }
+}
