@@ -4,54 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Redirecting to Staging — The YUNity Project</title>
-  <meta http-equiv="refresh" content="0;url=https://staging.yunityproject.org">
+  <meta http-equiv="refresh" content="0;url=staging/index.html">
   <script>
-    // Immediate JS redirect as a fallback
-    (function(){
-      try { window.location.replace('https://staging.yunityproject.org'); } catch(e){}
-    })();
+    // JS fallback redirect
+    try { window.location.replace('staging/index.html'); } catch(e){}
   </script>
-  <style>body{background:#17344e;color:#fff;font-family:Calibri, sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0} a{color:#cba230}</style>
+  <style>
+    body{background:#17344e;color:#fff;font-family:Calibri, sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+    a{color:#cba230}
+    .container{max-width:900px;padding:24px;text-align:center}
+  </style>
 </head>
 <body>
-  <div style="text-align:center">
-    <h1>Redirecting to staging site...</h1>
-    <p>If you are not redirected automatically, <a href="https://staging.yunityproject.org">click here to open the staging site</a>.</p>
+  <div class="container">
+    <h1>Redirecting to staging...</h1>
+    <p>If you are not redirected automatically, <a href="staging/index.html">click here</a>.</p>
   </div>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Redirect — YUNity Project</title>
-  <link rel="stylesheet" href="style/enhanced-style.css">
-  <meta http-equiv="refresh" content="3;url=https://script.google.com/macros/s/AKfycbxQtCPmuRAcvLMjUsWsaeF4DjtwoPz9rtM9JJLc-gGb2VwDwpZegnhN-VqvZxACcak/exec">
-  <script>
-    // Fallback JS redirect if meta refresh is blocked
-    setTimeout(()=>{
-      window.location.href = 'https://script.google.com/macros/s/AKfycbxQtCPmuRAcvLMjUsWsaeF4DjtwoPz9rtM9JJLc-gGb2VwDwpZegnhN-VqvZxACcak/exec';
-    }, 1500);
-  </script>
-</head>
-<body>
-  <div class="header-container">
-        <div class="header-pattern"></div>
-        <div class="header-text">
-            <h1>The YUNity Project</h1>
-            <p class="header-tagline">Veritas vos liberabit</p>
-        </div>
-    </div>
-
-    <div id="nav-placeholder"></div>
-
-  <div style="max-width:780px;margin:48px auto;font-family:Arial,Helvetica,sans-serif;text-align:center;">
-    <h1>Admin Dashboard Moved</h1>
-    <p>The admin dashboard has been moved to a Google Apps Script web app for secure access.</p>
-    <p>You will be redirected automatically. If not, <a href="https://script.google.com/macros/s/AKfycbxQtCPmuRAcvLMjUsWsaeF4DjtwoPz9rtM9JJLc-gGb2VwDwpZegnhN-VqvZxACcak/exec">click here to open the admin app</a>.</p>
-    <p style="margin-top:18px;color:#666">If you are not recognized as an admin, contact the site owner.</p>
-  </div>
-  <script src="javascript/nav.js"></script>
 </body>
 </html>
